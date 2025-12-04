@@ -1,6 +1,264 @@
 export const PAGE_SEARCH_CONFIG = {
-  // Support at home Page 
-    supportAtHome: [
+  // Home Page
+  home: [
+    {
+      label: "Home – Overview",
+      path: "/",
+      sectionId: "home-hero",
+      keywords: [
+        // Brand & Core
+        "rosewood gardens",
+        "rosewood gardens aged care",
+        "bkv aged care",
+        "best aged care provider",
+        "trusted aged care",
+
+        // Services
+        "aged care services",
+        "disability care services",
+        "ndis registered provider",
+        "support at home provider",
+        "private residential aged care",
+        "respite care melbourne",
+        "palliative care melbourne",
+
+        // Locations
+        "aged care melbourne",
+        "aged care sydney",
+        "ndis provider melbourne",
+        "ndis provider sydney",
+        "support at home melbourne",
+        "support at home sydney",
+
+        // Intent Based
+        "compassionate care",
+        "24 7 nursing care",
+        "clinical aged care",
+        "high quality disability care",
+        "person centred care",
+        "holistic care",
+
+        // General SEO
+        "home",
+        "homepage",
+        "overview",
+        "start here",
+        "care near me",
+        "aged care near me",
+        "ndis support near me",
+        "home care near me",
+      ],
+    },
+
+    {
+      label: "Home – Our Services",
+      path: "/",
+      sectionId: "services",
+      keywords: [
+        // Service Categories
+        "our services",
+        "what we do",
+        "residential aged care",
+        "aged care facility",
+        "disability care facility",
+        "ndis support services",
+        "support at home services",
+        "private self funded care",
+
+        // Clinical
+        "24 7 nursing care",
+        "registered nurses onsite",
+        "clinical care",
+        "medication management",
+        "wound care",
+        "high intensity care",
+
+        // Funding
+        "ndis funded care",
+        "home care package",
+        "hcp services",
+        "support at home funding",
+        "private aged care options",
+
+        // Keywords for ranking
+        "patient centred care",
+        "personalised care plans",
+        "aged care programs",
+        "disability support programs",
+        "home care services",
+        "in home care support",
+      ],
+    },
+
+    {
+      label: "Home – About Rosewood Gardens",
+      path: "/",
+      sectionId: "home-about",
+      keywords: [
+        // Brand Trust
+        "about rosewood gardens",
+        "about bkv aged care",
+        "trusted aged care provider",
+        "family owned aged care",
+        "reliable aged care services",
+
+        // Care Philosophy
+        "person centred care philosophy",
+        "dignity and respect in care",
+        "family focused care",
+        "transforming care into comfort",
+        "compassion driven care",
+
+        // Authority
+        "registered care provider",
+        "ndis approved provider",
+        "aged care quality standards",
+        "disability care compliance",
+
+        // Story Keywords
+        "who we are",
+        "our story",
+        "our background",
+        "our care journey",
+        "family feel care",
+      ],
+    },
+
+    {
+      label: "Home – Facilities Snapshot",
+      path: "/",
+      sectionId: "home-facilities",
+      keywords: [
+        // Facilities
+        "aged care facilities melbourne",
+        "disability care facilities melbourne",
+        "residential care home melbourne",
+        "supported independent living",
+        "specialist disability accommodation",
+
+        // Amenities
+        "modern aged care facility",
+        "private aged care rooms",
+        "ensuite rooms aged care",
+        "medical grade care rooms",
+
+        // Visual SEO
+        "aged care gallery",
+        "facility photos",
+        "disability care photos",
+        "residential care images",
+        "virtual care facility tour",
+      ],
+    },
+
+    {
+      label: "Home – Testimonials & Stories",
+      path: "/",
+      sectionId: "home-testimonials",
+      keywords: [
+        "aged care reviews",
+        "ndis reviews",
+        "home care testimonials",
+        "family feedback aged care",
+        "client success stories",
+
+        "trusted by families",
+        "real family experiences",
+        "disability care reviews",
+        "rosewood gardens reviews",
+        "google reviews aged care",
+      ],
+    },
+  ],
+
+  // About Page
+  about: [
+    {
+      label: "About – Vision",
+      path: "/about",
+      sectionId: "about-vision",
+      keywords: [
+        "vision",
+        "our vision",
+        "future vision",
+        "company vision",
+        "care vision",
+      ],
+    },
+    {
+      label: "About – Mission",
+      path: "/about",
+      sectionId: "about-vision",
+      keywords: [
+        "mission",
+        "our mission",
+        "purpose",
+        "company mission",
+        "service mission",
+      ],
+    },
+    {
+      label: "About – Values",
+      path: "/about",
+      sectionId: "about-values",
+      keywords: [
+        "values",
+        "our values",
+        "compassion",
+        "respect",
+        "dignity",
+        "integrity",
+        "inclusivity",
+        "collaboration",
+        "excellence",
+      ],
+    },
+    {
+      label: "About – Why Choose Us",
+      path: "/about",
+      sectionId: "about-why-choose-us",
+      keywords: [
+        "why choose us",
+        "care model",
+        "in the community",
+        "ashburton",
+        "facility",
+        "unique model",
+        "service model",
+      ],
+    },
+    {
+      label: "About – Testimonials",
+      path: "/about",
+      sectionId: "about-testimonials",
+      keywords: [
+        "testimonials",
+        "reviews",
+        "customer reviews",
+        "feedback",
+        "residents",
+        "families",
+        "stories",
+      ],
+    },
+    {
+      label: "About – Team",
+      path: "/about",
+      sectionId: "about-team",
+      keywords: [
+        "team",
+        "our team",
+        "expertise",
+        "skills",
+        "care team",
+        "staff",
+        "clinicians",
+      ],
+    },
+  ],
+
+  // Support at home Page
+  supportAtHome: [
     {
       label: "Support at Home – Overview",
       path: "/support-at-home",
@@ -12,7 +270,7 @@ export const PAGE_SEARCH_CONFIG = {
         "care at home",
         "support program",
         "older australians",
-        "live well at home"
+        "live well at home",
       ],
     },
     {
@@ -25,7 +283,7 @@ export const PAGE_SEARCH_CONFIG = {
         "personal care",
         "domestic assistance",
         "home help",
-        "in-home support"
+        "in-home support",
       ],
     },
     {
@@ -38,7 +296,7 @@ export const PAGE_SEARCH_CONFIG = {
         "respite",
         "community connection",
         "therapy at facility",
-        "residential day programs"
+        "residential day programs",
       ],
     },
     {
@@ -54,7 +312,7 @@ export const PAGE_SEARCH_CONFIG = {
         "allied health",
         "transport",
         "meals",
-        "gardening"
+        "gardening",
       ],
     },
     {
@@ -69,7 +327,7 @@ export const PAGE_SEARCH_CONFIG = {
         "statements",
         "rollover funds",
         "budget",
-        "funding structure"
+        "funding structure",
       ],
     },
     {
@@ -84,7 +342,7 @@ export const PAGE_SEARCH_CONFIG = {
         "rails",
         "ramps",
         "independent and safe",
-        "at home equipment"
+        "at home equipment",
       ],
     },
     {
@@ -98,7 +356,7 @@ export const PAGE_SEARCH_CONFIG = {
         "reablement",
         "step-down care",
         "after hospital",
-        "pathways"
+        "pathways",
       ],
     },
     {
@@ -113,7 +371,7 @@ export const PAGE_SEARCH_CONFIG = {
         "5–25%",
         "17.5–85%",
         "government contributions",
-        "participant contribution"
+        "participant contribution",
       ],
     },
     {
@@ -126,7 +384,7 @@ export const PAGE_SEARCH_CONFIG = {
         "hourly rate",
         "service prices",
         "view price list",
-        "detailed pricing"
+        "detailed pricing",
       ],
     },
     {
@@ -143,7 +401,7 @@ export const PAGE_SEARCH_CONFIG = {
         "equipment included",
         "home modifications included",
         "do i need to pay",
-        "when does support at home start"
+        "when does support at home start",
       ],
     },
     {
@@ -156,14 +414,13 @@ export const PAGE_SEARCH_CONFIG = {
         "ready to get started",
         "talk to care manager",
         "care plan",
-        "support at home contact"
+        "support at home contact",
       ],
     },
   ],
 
-
   // Facilities Page
-    facilities: [
+  facilities: [
     {
       label: "Facilities – Overview",
       path: "/facilities",

@@ -1,4 +1,3 @@
-// src/Pages/SupportAtHome.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";

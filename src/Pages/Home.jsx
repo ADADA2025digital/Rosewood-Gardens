@@ -15,12 +15,63 @@ import Partner1 from "../assets/Partner1.png";
 import Partner2 from "../assets/Partner2.png";
 import video from "../assets/video.mp4";
 import SeoHead from "../Components/SeoHead";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function Home({ id = "contentCarousel" }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Scroll to section based on ?search= query from global header search
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match if there is no exact key in KEYWORD_TO_SECTION
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only allow *Home page* section IDs
+    const HOME_SECTION_IDS = new Set([
+      "home-hero",
+      "services",
+      "home-about",
+      "home-careers",
+      "home-facilities",
+      "home-testimonials",
+      "home-newsletter",
+      "home-contact",
+    ]);
+
+    if (!targetId || !HOME_SECTION_IDS.has(targetId)) return;
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 160; // adjust to your header height
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   // Function to scroll to services section
   const scrollToServices = () => {
@@ -33,8 +84,9 @@ export default function Home({ id = "contentCarousel" }) {
   useEffect(() => {
     // Check both location state AND URL parameters
     const searchParams = new URLSearchParams(location.search);
-    const shouldScroll = location.state?.scrollTo === 'services' || 
-                        searchParams.get('scrollTo') === 'services';
+    const shouldScroll =
+      location.state?.scrollTo === "services" ||
+      searchParams.get("scrollTo") === "services";
 
     if (shouldScroll) {
       // console.log('Scrolling to services section');
@@ -42,18 +94,18 @@ export default function Home({ id = "contentCarousel" }) {
       if (servicesSection) {
         // Small timeout to ensure DOM is ready
         setTimeout(() => {
-          servicesSection.scrollIntoView({ 
+          servicesSection.scrollIntoView({
             behavior: "smooth",
-            block: "start"
+            block: "start",
           });
         }, 100);
-        
+
         // Clear both state and URL parameters
         window.history.replaceState({}, document.title);
-        
+
         // Remove the search parameter from URL
         const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
+        window.history.replaceState({}, "", newUrl);
       }
     }
   }, [location]);
@@ -208,7 +260,7 @@ export default function Home({ id = "contentCarousel" }) {
     <>
       <SeoHead {...seoData.home} />
 
-      <div className="container-fluid p-0">
+      <div id="home-hero" className="container-fluid p-0">
         {/* Hero section */}
         <section className="vh-100 position-relative">
           {/* Static Video Background */}
@@ -489,7 +541,7 @@ export default function Home({ id = "contentCarousel" }) {
         </section>
 
         {/* About us section */}
-        <section className="testimonal py-5">
+        <section id="home-about" className="testimonal py-5">
           <div className="container py-5">
             <div className="row flex-lg-row flex-column">
               <div className="col-lg-6 col-12 mb-4">
@@ -608,7 +660,7 @@ export default function Home({ id = "contentCarousel" }) {
         <CareerBanner />
 
         {/* Facilities section */}
-        <section className="bg-white py-5">
+        <section id="home-facilities" className="bg-white py-5">
           <div className="container text-center pt-5">
             <small className="text-uppercase dark-text fs-5 fw-semibold">
               Facilities
@@ -630,7 +682,7 @@ export default function Home({ id = "contentCarousel" }) {
         {/* <StatsBanner /> */}
 
         {/* Testimonal section */}
-        <section className="testimonal py-5">
+        <section id="home-testimonials" className="testimonal py-5">
           <div className="container rounded-5 my-5 bg-white text-center">
             <div className="row align-items-center justify-content-center p-4 p-sm-4 p-lg-5">
               <div className="col-md-12 text-center">

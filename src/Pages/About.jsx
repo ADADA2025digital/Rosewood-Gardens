@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useSearchParams } from "react-router-dom";
 import {
   goalData,
   seoData,
@@ -23,6 +24,7 @@ import aboutImg10 from "../assets/DSC01068.jpg";
 import aboutImg11 from "../assets/DSC01082-Edit.jpg";
 import aboutImg12 from "../assets/DSC01111.jpg";
 import SeoHead from "../Components/SeoHead";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 const allImages = [
   aboutImg1,
@@ -145,6 +147,55 @@ export default function About() {
     };
   }, []);
 
+  // Scroll to section based on ?search= query from global header search
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match if there is no exact key in KEYWORD_TO_SECTION
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only allow About page section IDs
+    const ABOUT_SECTION_IDS = new Set([
+      "about-vision",
+      "about-values",
+      "about-why-choose-us",
+      "about-testimonials",
+      "about-team",
+    ]);
+
+    if (!targetId || !ABOUT_SECTION_IDS.has(targetId)) return;
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 160; // adjust to your header height
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
+
+
   return (
     <>
       <SeoHead {...seoData.about} />
@@ -187,7 +238,7 @@ export default function About() {
         <section className="py-5 mt-5 bg-white">
           <div className="container pt-5">
             <div className="row mb-5">
-              <h1 className="heading fw-semibold">
+              <h1 id="about-vision" className="heading fw-semibold">
                 Caring <span className="dark-text">Vision</span>. Purposeful{" "}
                 <span className="dark-text">Mission</span>. <br /> Meaningful{" "}
                 <span className="dark-text">Service</span>.
@@ -270,7 +321,7 @@ export default function About() {
                   Gardens Residence or at the location of your choice (e.g. SIL)
                 </p> */}
 
-                <h4 className="dark-text fw-bold text-start py-3">
+                <h4 id="about-why-choose-us" className="dark-text fw-bold text-start py-3">
                   Our care model is unique:
                 </h4>
                 <div className="row">
@@ -301,7 +352,7 @@ export default function About() {
         <CareerBanner />
 
         {/* Values section */}
-        <section className="p-3 p-lg-5 icon-bg rounded-0 rounded-md-5">
+        <section id="about-values" className="p-3 p-lg-5 icon-bg rounded-0 rounded-md-5">
           <div className="container py-3 py-lg-5 my-0 my-lg-5 text-white">
             <div className="row mb-3">
               <h1 className="heading fw-semibold">Our Values</h1>
@@ -390,7 +441,7 @@ export default function About() {
         </section>
 
         {/* Testimonal section */}
-        <section className="testimonal py-5">
+        <section id="about-testimonials" className="testimonal py-5">
           <div className="container rounded-5 my-5 bg-white text-center">
             <div className="row align-items-center justify-content-center p-4 p-sm-4 p-lg-5">
               <div className="col-md-12 text-center">
@@ -478,7 +529,7 @@ export default function About() {
         </section>
 
         {/* Team section */}
-        <section className="py-5 bg-white">
+        <section id="about-team" className="py-5 bg-white">
           <div className="container">
             <div className="text-center">
               {/* <small className="text-uppercase fw-semibold">OUR TEAM</small> */}

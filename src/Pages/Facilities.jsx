@@ -1,4 +1,3 @@
-// src/Pages/Facilities.jsx
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import sideImg from "../assets/3.png";
