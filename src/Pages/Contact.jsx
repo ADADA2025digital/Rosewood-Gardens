@@ -9,6 +9,7 @@ import InputBox from "../Components/InputBox";
 import TextBox from "../Components/TextBox";
 import SeoHead from "../Components/SeoHead";
 import { useSearchParams } from "react-router-dom";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 // EmailJS configuration
 const EMAILJS_SERVICE_ID = "service_24g96ge";
@@ -16,38 +17,44 @@ const EMAILJS_TEMPLATE_ID = "template_v6vl8rv";
 const EMAILJS_PUBLIC_KEY = "dYh6H0ZdHIlh5o3rI";
 
 export default function Contact() {
-  const [searchParams] = useSearchParams();
+const [searchParams] = useSearchParams();
 
-  // 🔎 Handle ?search=... → scroll to section with offset
-  useEffect(() => {
-    const raw = searchParams.get("search");
-    if (!raw) return;
+useEffect(() => {
+  const raw = searchParams.get("search");
+  if (!raw) return;
 
-    const key = raw.toLowerCase();
+  const q = raw.toLowerCase().trim();
+  if (!q) return;
 
-    // Map ?search values → DOM IDs
-    const SCROLL_TARGETS = {
-      form: "form", // <div id="form" ...>
-      "contact-data": "contact-data", // <div id="contact-data" ...>
-      // add more mappings here if needed
-    };
+  let targetId = KEYWORD_TO_SECTION[q];
 
-    const targetId = SCROLL_TARGETS[key] || key;
-    const el = document.getElementById(targetId);
-    if (!el) return;
+  if (!targetId) {
+    for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+      if (q.includes(keyword)) {
+        targetId = sectionId;
+        break;
+      }
+    }
+  }
 
-    setTimeout(() => {
-      const HEADER_HEIGHT = 180; // adjust to your fixed header height
+  if (!targetId) {
+    targetId = q;
+  }
 
-      const elementY = el.getBoundingClientRect().top + window.scrollY;
-      const offsetY = elementY - HEADER_HEIGHT;
+  const el = document.getElementById(targetId);
+  if (!el) return;
 
-      window.scrollTo({
-        top: offsetY,
-        behavior: "smooth",
-      });
-    }, 200);
-  }, [searchParams]);
+  setTimeout(() => {
+    const HEADER_HEIGHT = 180; 
+    const elementY = el.getBoundingClientRect().top + window.scrollY;
+    const offsetY = elementY - HEADER_HEIGHT;
+
+    window.scrollTo({
+      top: offsetY,
+      behavior: "smooth",
+    });
+  }, 200);
+}, [searchParams]);
 
   const regexValidators = {
     name: /^[A-Za-z\s]{3,}$/, // At least 3 letters
@@ -414,7 +421,7 @@ export default function Contact() {
                 </h1>
               </div>
 
-              {/* CONTACT DATA SECTION – matches id "contact-data" */}
+              {/* CONTACT DATA SECTION – id="contact-data" */}
               <div
                 id="contact-data"
                 className="row mb-5 justify-content-center"
@@ -444,7 +451,7 @@ export default function Contact() {
                 ))}
               </div>
 
-              {/* FORM SECTION – matches id "form" */}
+              {/* FORM SECTION – id="form" */}
               <div
                 id="form"
                 className="container testimonal rounded-5 mt-5 p-2 p-lg-5"

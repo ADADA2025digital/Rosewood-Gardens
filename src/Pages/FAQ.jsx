@@ -1,14 +1,17 @@
-import React, { useState, useRef, useMemo } from "react";
+// src/Pages/FAQ.jsx
+import React, { useState, useRef, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import heroImg from "../assets/27.png";
 import NewsletterSection from "../Components/Newsletter";
 import { faqItems as RAW_FAQ, seoData } from "../Constants/Data";
 import SeoHead from "../Components/SeoHead";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function FAQ() {
-  const [openFaqId, setOpenFaqId] = useState(null);
+  const [openFaqId, setOpenFaqId] = useState(null); // stores item._k
   const toggleFaq = (id) => setOpenFaqId((prev) => (prev === id ? null : id));
 
-  // --- Category labels you support (display order too)
+  // --- Category labels (and display order)
   const CATEGORY_ORDER = [
     "All",
     "General",
@@ -20,7 +23,18 @@ export default function FAQ() {
     "Admissions & Tours",
   ];
 
-  // --- Lightweight category inference for items without an explicit category
+  // --- Map categories → DOM ids (used for scrolling from global search)
+  const CATEGORY_ID_MAP = {
+    General: "faq-general",
+    "In-Home Care (HCP → Support at Home)": "faq-in-home-care",
+    "NDIS & SIL": "faq-ndis-sil",
+    "Residential Care": "faq-residential-care",
+    "Clinical & Safety": "faq-clinical-safety",
+    "Costs & Funding": "faq-costs-funding",
+    "Admissions & Tours": "faq-admissions-tours",
+  };
+
+  // --- Infer category when one is not provided in RAW_FAQ
   const inferCategory = (q = "") => {
     const s = q.toLowerCase();
     if (/(ndis|sil|sda|support coordinator)/.test(s)) return "NDIS & SIL";
@@ -37,24 +51,27 @@ export default function FAQ() {
     return "General";
   };
 
-  // --- Normalize FAQ: ensure each item has a category
+  // --- Normalize FAQ items (ensure category + stable key)
   const faqItems = useMemo(
     () =>
-      RAW_FAQ.map((it, i) => ({
-        ...it,
-        category: it.category ? it.category : inferCategory(it.question || ""),
-        _k: `${it.category || inferCategory(it.question || "")}-${i}`, // stable key/id base
-      })),
+      RAW_FAQ.map((it, i) => {
+        const cat = it.category || inferCategory(it.question || "");
+        return {
+          ...it,
+          category: cat,
+          _k: `${cat}-${i}`, // stable key per item
+        };
+      }),
     []
   );
 
-  // --- Build categories from data (include "All" first, then those present)
+  // --- Category pills based on data
   const dataCategories = useMemo(() => {
     const present = new Set(faqItems.map((it) => it.category));
     return CATEGORY_ORDER.filter((c) => c === "All" || present.has(c));
   }, [faqItems]);
 
-  // Search + Category state
+  // --- Local FAQ search (only when user types)
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(dataCategories[0] || "All");
 
@@ -66,7 +83,7 @@ export default function FAQ() {
 
   const placeholder = "Search questions (e.g., fees, SIL, respite)";
 
-  // Filter using category + search (supports "All")
+  // --- Filter FAQ by category + query
   const filteredFaqs = useMemo(() => {
     const q = query.trim().toLowerCase();
     return faqItems.filter((item) => {
@@ -83,7 +100,7 @@ export default function FAQ() {
     });
   }, [faqItems, query, active]);
 
-  // When "All" is active, group the results by category and keep CATEGORY_ORDER
+  // --- Grouped view for "All" category
   const groupedForAll = useMemo(() => {
     if (active !== "All") return [];
     const map = new Map();
@@ -91,12 +108,68 @@ export default function FAQ() {
       if (!map.has(it.category)) map.set(it.category, []);
       map.get(it.category).push(it);
     }
-    // preserve display order defined above
     return CATEGORY_ORDER.filter((c) => c !== "All" && map.has(c)).map((c) => ({
       category: c,
       items: map.get(c),
     }));
   }, [filteredFaqs, active]);
+
+  // --- URL search params (from global header search)
+  const [searchParams] = useSearchParams();
+
+  // ✅ Use ?search= ONLY to scroll + open; do NOT push into `query`
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match fallback (e.g. "ndis plan" contains "ndis")
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only scroll if the section id is one of our FAQ headings
+    if (targetId && Object.values(CATEGORY_ID_MAP).includes(targetId)) {
+      const el = document.getElementById(targetId);
+      if (el) {
+        setTimeout(() => {
+          const HEADER_HEIGHT = 180; // adjust for your fixed header height
+          const elementY = el.getBoundingClientRect().top + window.scrollY;
+          const offsetY = elementY - HEADER_HEIGHT;
+
+          window.scrollTo({
+            top: offsetY,
+            behavior: "smooth",
+          });
+        }, 200);
+      }
+    }
+
+    // Also auto-open the first FAQ that matches this term
+    const match = faqItems.find((item) => {
+      const haystack = [
+        item.question || "",
+        item.answer || "",
+        ...(item.list || []),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+
+    if (match) {
+      setOpenFaqId(match._k);
+    }
+  }, [searchParams, faqItems]);
 
   return (
     <>
@@ -113,7 +186,7 @@ export default function FAQ() {
                     Frequently Asked Questions
                   </h1>
                   <p className="lead text-dark">
-                    Compassionate care, dignified living - delivered at home, in
+                    Compassionate care, dignified living – delivered at home, in
                     our residence, or in the community (e.g., SIL/SDA).
                   </p>
                 </div>
@@ -129,13 +202,14 @@ export default function FAQ() {
           </div>
         </section>
 
-        {/* Search + Category Pills */}
+        {/* Search + Categories + List */}
         <section className="py-4">
           <div className="container">
             <div className="row">
+              {/* Left column: search + FAQs */}
               <div className="col-md-9">
                 <div className="bg-light border rounded p-3 mb-4">
-                  {/* Search */}
+                  {/* FAQ local search */}
                   <form onSubmit={onSubmit}>
                     <div className="input-group">
                       <span className="input-group-text bg-white border-end-0">
@@ -146,14 +220,14 @@ export default function FAQ() {
                         type="search"
                         className="form-control bg-white border-start-0"
                         placeholder={placeholder}
-                        value={query}
+                        value={query} // only user typing changes this
                         onChange={(e) => setQuery(e.target.value)}
                         aria-label="Search questions"
                       />
                     </div>
                   </form>
 
-                  {/* Pills from DATA */}
+                  {/* Category pills */}
                   <div className="d-flex flex-wrap gap-2 mt-3">
                     {dataCategories.map((c) => {
                       const isActive = c === active;
@@ -174,35 +248,38 @@ export default function FAQ() {
                   </div>
                 </div>
 
-                {/* Empty state */}
+                {/* No results */}
                 {filteredFaqs.length === 0 && (
                   <div className="alert alert-secondary" role="alert">
                     No results found. Try a different search or category.
                   </div>
                 )}
 
-                {/* --- ALL VIEW: grouped by category with one heading each --- */}
+                {/* ALL view: grouped by category */}
                 {active === "All" &&
                   groupedForAll.map(({ category, items }) => (
                     <div key={category} className="mb-4">
-                      <h4 className="fw-semibold text-start mb-3">
+                      <h4
+                        id={CATEGORY_ID_MAP[category]}
+                        className="fw-semibold text-start mb-3"
+                      >
                         {category}
                       </h4>
-                      {items.map((item, i) => {
-                        const id = `${item._k}-all-${i}`;
-                        const isOpen = openFaqId === id;
+                      {items.map((item) => {
+                        const key = item._k;
+                        const isOpen = openFaqId === key;
                         return (
-                          <div key={id} className="mb-3 p-0">
+                          <div key={key} className="mb-3 p-0">
                             <button
                               type="button"
-                              onClick={() => toggleFaq(id)}
+                              onClick={() => toggleFaq(key)}
                               className={`w-100 border d-flex justify-content-between align-items-center px-4 py-3 bg-light ${
                                 isOpen
                                   ? "border-bottom-0 rounded-top-3"
                                   : "rounded-3"
                               }`}
                               aria-expanded={isOpen}
-                              aria-controls={`faq-panel-${id}`}
+                              aria-controls={`faq-panel-${key}`}
                             >
                               <span className="fw-medium text-start">
                                 {item.question}
@@ -218,7 +295,7 @@ export default function FAQ() {
 
                             {isOpen && (
                               <div
-                                id={`faq-panel-${id}`}
+                                id={`faq-panel-${key}`}
                                 className="px-4 pb-3 border border-top-0 text-start rounded-bottom bg-light"
                               >
                                 {item.answer && (
@@ -244,27 +321,32 @@ export default function FAQ() {
                     </div>
                   ))}
 
-                {/* --- SINGLE-CATEGORY VIEW (no repeated category per item heading) --- */}
+                {/* Single-category view */}
                 {active !== "All" && filteredFaqs.length > 0 && (
-                  <h4 className="fw-semibold text-start mb-3">{active}</h4>
+                  <h4
+                    id={CATEGORY_ID_MAP[active]}
+                    className="fw-semibold text-start mb-3"
+                  >
+                    {active}
+                  </h4>
                 )}
 
                 {active !== "All" &&
-                  filteredFaqs.map((item, index) => {
-                    const id = `${item._k}-${index}`;
-                    const isOpen = openFaqId === id;
+                  filteredFaqs.map((item) => {
+                    const key = item._k;
+                    const isOpen = openFaqId === key;
                     return (
-                      <div key={id} className="mb-3 p-0">
+                      <div key={key} className="mb-3 p-0">
                         <button
                           type="button"
-                          onClick={() => toggleFaq(id)}
+                          onClick={() => toggleFaq(key)}
                           className={`w-100 border d-flex justify-content-between align-items-center px-4 py-3 bg-light ${
                             isOpen
                               ? "border-bottom-0 rounded-top-3"
                               : "rounded-3"
                           }`}
                           aria-expanded={isOpen}
-                          aria-controls={`faq-panel-${id}`}
+                          aria-controls={`faq-panel-${key}`}
                         >
                           <span className="fw-medium text-start">
                             {item.question}
@@ -280,7 +362,7 @@ export default function FAQ() {
 
                         {isOpen && (
                           <div
-                            id={`faq-panel-${id}`}
+                            id={`faq-panel-${key}`}
                             className="px-4 pb-3 border border-top-0 text-start rounded-bottom bg-light"
                           >
                             {item.answer && (
@@ -305,8 +387,8 @@ export default function FAQ() {
                   })}
               </div>
 
+              {/* Right column: contact box */}
               <div className="col-md-3">
-                {/* Right column unchanged */}
                 <div className="card icon-bg rounded-3 text-white text-start p-4">
                   <h6 className="mb-2 fw-semibold">Can’t find your answer?</h6>
                   <p className="mb-3 small opacity-90">
@@ -325,7 +407,7 @@ export default function FAQ() {
 
                     <a
                       href="mailto:info@rosewoodgardens.com.au"
-                      className="btn text-white rounded  text-start fw-semibold"
+                      className="btn text-white rounded text-start fw-semibold"
                       style={{
                         fontSize: "12px",
                         backgroundColor: "rgba(255, 255, 255, 0.2)",

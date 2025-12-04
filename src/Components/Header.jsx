@@ -14,7 +14,7 @@ export default function Header() {
   const modalRef = useRef(null);
   const videoRef = useRef(null);
 
-  // 🔎 Search state
+  // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -89,12 +89,20 @@ export default function Header() {
     setSearchResults(results);
   }, [searchQuery]);
 
-  // Click on a suggestion → use its path as-is
-  const handleResultNavigate = (path) => {
+  // Click on a suggestion → navigate with ?search=<typed keyword>
+  const handleResultNavigate = (item) => {
+    const q = searchQuery.trim();
+    const basePath = (item && item.path) || "/";
+
+    const finalPath = q
+      ? `${basePath}?search=${encodeURIComponent(q)}`
+      : basePath;
+
     setShowSearchDropdown(false);
-    setSearchQuery("");
     setSearchResults([]);
-    navigate(path);
+    setSearchQuery("");
+
+    navigate(finalPath);
   };
 
   // Enter key → go to first matched page with ?search=query
@@ -102,8 +110,9 @@ export default function Header() {
     if (e.key === "Enter" && searchResults.length > 0) {
       const matchedItem = searchResults[0];
 
-      // Extract only base path (remove any existing query in config)
-      const basePath = matchedItem.path.split("?")[0];
+      const basePath = matchedItem.path
+        ? matchedItem.path.split("?")[0]
+        : "/";
 
       const q = searchQuery.trim();
       if (!q) return;
@@ -114,6 +123,7 @@ export default function Header() {
 
       setShowSearchDropdown(false);
       setSearchResults([]);
+      setSearchQuery("");
     }
   };
 
@@ -197,31 +207,30 @@ export default function Header() {
                       }}
                       onMouseLeave={() => setShowSearchDropdown(false)}
                     >
-                      {searchResults.length > 0 ? (
-                        searchResults.map((item) => (
-                          <button
-                            key={item.path + item.label}
-                            type="button"
-                            className="list-group-item list-group-item-action border-0 w-100 text-start small"
-                            style={{ fontSize: "0.85rem" }}
-                            onMouseDown={(e) => {
-                              e.preventDefault(); // so blur doesn't cancel click
-                              handleResultNavigate(item.path);
-                            }}
-                          >
-                            <div className="fw-semibold">{item.label}</div>
-                            {item.keywords && (
-                              <div className="text-muted p-2 rounded-0">
-                                <small>{item.keywords.join(", ")}</small>
-                              </div>
-                            )}
-                          </button>
-                        ))
-                      ) : (
-                        <div className="px-3 py-2 small text-muted">
-                          No results found
-                        </div>
-                      )}
+{searchResults.length > 0 ? (
+  searchResults.map((item) => (
+    <button
+      key={item.path + item.label}
+      type="button"
+      className="list-group-item list-group-item-action border-0 w-100 text-start small"
+      style={{ fontSize: "0.85rem" }}
+      onMouseDown={(e) => {
+        e.preventDefault(); // so blur doesn't cancel click
+        handleResultNavigate(item);
+      }}
+    >
+      <div className="fw-semibold">{item.label}</div>
+      {searchQuery && (
+        <div className="text-muted p-2 rounded-0">
+          <small>Searched: “{searchQuery}”</small>
+        </div>
+      )}
+    </button>
+  ))
+) : (
+  <div className="px-3 py-2 small text-muted">No results found</div>
+)}
+
                     </div>
                   )}
                 </div>

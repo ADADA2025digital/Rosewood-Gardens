@@ -1,98 +1,232 @@
-export const SEARCH_ITEMS = [
-  { label: "Home", path: "/", keywords: ["home", "main"] },
-  { label: "About Us", path: "/about", keywords: ["about", "who we are"] },
-  { label: "Our Story", path: "/visitussoon", keywords: ["story", "history"] },
-  { label: "Our Team", path: "/visitussoon", keywords: ["team", "staff"] },
-  { label: "Services", path: "/services", keywords: ["services", "care"] },
+export const PAGE_SEARCH_CONFIG = {
+  // FAQ Page
+  faq: [
+    {
+      label: "FAQ – General Questions",
+      path: "/faq",
+      sectionId: "faq-general",
+      keywords: [
+        "faq",
+        "questions",
+        "general questions",
+        "rosewood gardens faq",
+        "about rosewood gardens",
+        "aged care questions",
+        "disability care questions",
+        "support options",
+        "how can you support me",
+        "family support",
+      ],
+    },
+    {
+      label: "FAQ – In-Home Care & HCP (Support at Home)",
+      path: "/faq",
+      sectionId: "faq-in-home-care",
+      keywords: [
+        "home care",
+        "in-home care",
+        "support at home",
+        "hcp",
+        "home care package",
+        "use my hcp",
+        "what does hcp cover",
+        "support at home questions",
+        "in-home aged care",
+        "care at home",
+      ],
+    },
+    {
+      label: "FAQ – NDIS & SIL",
+      path: "/faq",
+      sectionId: "faq-ndis-sil",
+      keywords: [
+        "ndis",
+        "ndis supports",
+        "ndis package",
+        "ndis plan",
+        "support coordinator",
+        "sil",
+        "supported independent living",
+        "sda",
+        "specialist disability accommodation",
+        "ndis services",
+      ],
+    },
+    {
+      label: "FAQ – Residential Care",
+      path: "/faq",
+      sectionId: "faq-residential-care",
+      keywords: [
+        "residential care",
+        "aged care facility",
+        "rooms",
+        "single rooms",
+        "ensuite",
+        "24/7 nursing",
+        "clinical care",
+        "move into care",
+        "live in the residence",
+        "long-term stay",
+      ],
+    },
+    {
+      label: "FAQ – Costs & Funding",
+      path: "/faq",
+      sectionId: "faq-costs-funding",
+      keywords: [
+        "fees",
+        "costs",
+        "funding",
+        "hcp funding",
+        "ndis funding",
+        "weekly fee",
+        "rad",
+        "dap",
+        "bonds",
+        "accommodation costs",
+        "private self-funded care",
+        "what is included",
+        "what does it cover",
+      ],
+    },
+    {
+      label: "FAQ – Admissions & Tours",
+      path: "/faq",
+      sectionId: "faq-admissions-tours",
+      keywords: [
+        "admission",
+        "admissions",
+        "start receiving care",
+        "how quickly can I start",
+        "join rosewood gardens",
+        "book a tour",
+        "facility tour",
+        "inspection",
+        "visit the residence",
+        "acat assessment",
+        "eligibility",
+      ],
+    },
+  ],
 
-  {
-    label: "Support at Home",
-    path: "/support-at-home",
-    keywords: ["home care", "support at home", "in-home"],
-  },
+  // Contact Page
+  contact: [
+    {
+      label: "Contact – Phone",
+      path: "/contact-us",
+      sectionId: "contact-data",
+      keywords: [
+        "phone",
+        "call",
+        "telephone",
+        "mobile",
+        "contact number",
+        "phone number",
+        "call us",
+        "speak to us",
+        "helpline",
+        "customer support",
+        "support phone",
+        "care phone",
+        "aged care phone",
+        "home care phone",
+        "ndis phone",
+        "ndis contact number",
+        "hcp contact",
+        "hotline",
+        "service number",
+      ],
+    },
 
-  {
-    label: "Support at Home Price List",
-    // will become /support-at-home-price-list?search=pricing on click
-    path: "/support-at-home-price-list?search=pricing",
-    keywords: ["price", "fees", "cost", "pricing"],
-  },
+    {
+      label: "Contact – Email",
+      path: "/contact-us",
+      sectionId: "contact-data",
+      keywords: [
+        "email",
+        "mail",
+        "write to us",
+        "contact email",
+        "support email",
+        "customer service email",
+        "send email",
+        "send message",
+        "email address",
+        "care email",
+        "aged care email",
+        "home care email",
+        "ndis email",
+        "hcp email",
+        "service email",
+      ],
+    },
 
-  {
-    label: "Facilities",
-    path: "/facilities",
-    keywords: ["facilities", "rooms", "amenities"],
-  },
+    {
+      label: "Contact – Form",
+      path: "/contact-us",
+      sectionId: "form",
+      keywords: [
+        "form",
+        "enquiry",
+        "message",
+        "contact form",
+        "enquiry form",
+        "send enquiry",
+        "submit enquiry",
+        "book a call",
+        "request a callback",
+        "request information",
+        "ask a question",
+        "apply for support",
+        "care enquiry",
+        "ndis enquiry",
+        "hcp enquiry",
+        "home care enquiry",
+        "aged care enquiry",
+      ],
+    },
+  ],
 
-  {
-    label: "FAQ",
-    // will become /faq?search=faq-top on click
-    path: "/faq?search=faq-top",
-    keywords: ["faq", "questions", "help"],
-  },
+  // later you can add more:
+  // services: [
+  //   {
+  //     label: "Services – Support at Home",
+  //     path: "/services",
+  //     sectionId: "support-at-home",
+  //     keywords: ["support at home", "home care", "in-home"],
+  //   },
+  // ],
+};
 
-  // Contact sections – all use `?search=...`
-  {
-    label: "Contact – Phone",
-    path: "/contact-us?search=contact-data",
-    keywords: ["phone", "call", "telephone", "mobile"],
-  },
+export const SEARCH_ITEMS = Object.values(PAGE_SEARCH_CONFIG).flat();
 
-  {
-    label: "Contact – Email",
-    path: "/contact-us?search=contact-data",
-    keywords: ["email", "mail", "write to us"],
-  },
+export const KEYWORD_TO_SECTION = (() => {
+  const map = {};
 
-  {
-    label: "Contact – Form",
-    path: "/contact-us?search=form",
-    keywords: ["form"],
-  },
+  Object.values(PAGE_SEARCH_CONFIG).forEach((pageItems) => {
+    pageItems.forEach((item) => {
+      const sectionId = item.sectionId;
+      if (!sectionId) return;
 
-  { label: "Career", path: "/career", keywords: ["jobs", "career", "apply"] },
+      (item.keywords || []).forEach((kw) => {
+        if (!kw) return;
+        map[String(kw).toLowerCase()] = sectionId;
+      });
 
-  { label: "Blog", path: "/blog", keywords: ["blog", "articles", "news"] },
+      if (item.label) {
+        const tokens = String(item.label)
+          .toLowerCase()
+          .split(/[\s–-]+/);
+        tokens.forEach((t) => {
+          if (t && !map[t]) {
+            map[t] = sectionId;
+          }
+        });
+      }
 
-  {
-    label: "Newsletter",
-    path: "/newsletter",
-    keywords: ["newsletter", "updates", "email updates"],
-  },
+      map[sectionId.toLowerCase()] = sectionId;
+    });
+  });
 
-  {
-    label: "Events",
-    path: "/events",
-    keywords: ["events", "programs", "activities"],
-  },
-
-  {
-    label: "Privacy Policy",
-    path: "/privacypolicy",
-    keywords: ["privacy", "policy", "data"],
-  },
-
-  {
-    label: "Terms of Use",
-    path: "/term-of-conditions",
-    keywords: ["terms", "conditions", "legal"],
-  },
-
-  {
-    label: "Accessibility",
-    path: "/accessibility",
-    keywords: ["accessibility", "a11y"],
-  },
-
-  {
-    label: "Clinical Disclaimer",
-    path: "/clinical-disclaimer",
-    keywords: ["clinical", "disclaimer", "medical"],
-  },
-
-  {
-    label: "Visit Us Soon",
-    path: "/visitussoon",
-    keywords: ["coming soon", "visit us"],
-  },
-];
+  return map;
+})();
