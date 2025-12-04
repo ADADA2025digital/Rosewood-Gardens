@@ -1,6 +1,12 @@
+// src/Pages/SupportAtHome.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import GlobalButton from "../Components/Button";
+import NewsletterSection from "../Components/Newsletter";
+import ServiceDetails from "../Components/ServiceDetails";
+
 import {
   categories,
   classificationsItems,
@@ -14,16 +20,17 @@ import {
   tablesections,
   servicesData,
 } from "../Constants/Data";
+
 import Hero from "../assets/21.png";
 import careathome from "../assets/serv2-sub1.jpg";
 import careatrosewood from "../assets/DSC00957.jpg";
 import ATHM from "../assets/serv2-sub5.jpg";
-import NewsletterSection from "../Components/Newsletter";
-import ServiceDetails from "../Components/ServiceDetails";
-import { useNavigate } from "react-router-dom";
+
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function SupportAtHome() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const scrollToServices = () => {
     navigate("/?scrollTo=services");
@@ -34,7 +41,7 @@ export default function SupportAtHome() {
   const left = features.slice(0, half);
   const right = features.slice(half);
 
-  // Single-open accordion - track only one open ID at a time
+  // Single-open accordion - track only one open ID at a time (Support at Home FAQs)
   const [openId, setOpenId] = useState(null);
 
   const toggleFaq = (id) => {
@@ -53,6 +60,8 @@ export default function SupportAtHome() {
   const supportAtHomeOptions = supportAtHomeData
     ? supportAtHomeData.features
     : [];
+
+  // Lock / unlock body scroll when modal opens
   useEffect(() => {
     if (showModal) {
       document.body.style.overflow = "hidden";
@@ -63,12 +72,64 @@ export default function SupportAtHome() {
       document.body.style.overflow = "auto";
     };
   }, [showModal]);
-  // Function to handle opening the modal
+
   const handleOpenModal = () => {
     setShowModal(true);
-    // Prevent body scrolling when modal is open
     document.body.style.overflow = "hidden";
   };
+
+  // 🔎 IDs that belong to this page (must match the ids we add in JSX below)
+  const SUPPORT_HOME_SECTION_IDS = [
+    "support-home-hero",
+    "support-home-care-at-home",
+    "support-home-care-at-rosewood",
+    "support-home-categories",
+    "support-home-how-it-works",
+    "support-home-at-hm",
+    "support-home-pathways",
+    "support-home-contributions",
+    "support-home-price-list",
+    "support-home-faq",
+    "support-home-cta",
+  ];
+
+  // 🔎 Handle ?search=... → scroll to the right section on this page
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match if not found directly (e.g., "support at home price list")
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only scroll if this keyword maps to a Support at Home section
+    if (!targetId || !SUPPORT_HOME_SECTION_IDS.includes(targetId)) return;
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180; // adjust if your fixed header height changes
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   return (
     <>
@@ -141,7 +202,10 @@ export default function SupportAtHome() {
                   <p className="fs-4 fw-bold dark-text">
                     Rosewood Gardens • Support at Home
                   </p>
-                  <h1 className="fw-bold text-dark heading display-3">
+                  <h1
+                    className="fw-bold text-dark heading display-3"
+                    id="support-home-hero"
+                  >
                     Live well at home or at{" "}
                     <span className="dark-text"> Rosewood Gardens </span>
                   </h1>
@@ -182,7 +246,10 @@ export default function SupportAtHome() {
         <section className="py-5">
           <div className="container p-md-0">
             <div className="row g-4">
-              <div className="col-12 col-md-6">
+              <div
+                className="col-12 col-md-6"
+                id="support-home-care-at-home"
+              >
                 <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 p-3">
                   <img
                     src={careathome}
@@ -204,7 +271,10 @@ export default function SupportAtHome() {
                 </div>
               </div>
 
-              <div className="col-12 col-md-6">
+              <div
+                className="col-12 col-md-6"
+                id="support-home-care-at-rosewood"
+              >
                 <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 p-3">
                   <img
                     src={careatrosewood}
@@ -232,7 +302,10 @@ export default function SupportAtHome() {
         {/* Service Categories Section */}
         <section className="py-5 testimonal">
           <div className="container p-md-0">
-            <h3 className="fw-bold heading dark-text mb-2 text-center text-md-start">
+            <h3
+              className="fw-bold heading dark-text mb-2 text-center text-md-start"
+              id="support-home-categories"
+            >
               Support at Home Service Categories
             </h3>
             <p className="text-dark mb-5 text-center text-md-start">
@@ -260,9 +333,10 @@ export default function SupportAtHome() {
             {/* How It Works Section */}
             <div
               className="rounded-4 p-4 shadow-sm"
+              id="support-home-how-it-works"
               style={{ background: "#ffd9de" }}
             >
-              <h5 className="fw-bold  text-center text-md-start dark-text heading mb-3">
+              <h5 className="fw-bold text-center text-md-start dark-text heading mb-3">
                 How Support at Home Works
               </h5>
               <div className="row g-3">
@@ -286,7 +360,10 @@ export default function SupportAtHome() {
         {/* Assistive Technology Section */}
         <section className="py-5">
           <div className="container p-md-0 text-center text-md-start">
-            <h3 className="fw-bold heading dark-text mb-2">
+            <h3
+              className="fw-bold heading dark-text mb-2"
+              id="support-home-at-hm"
+            >
               Assistive Technology & Home Modifications (AT-HM)
             </h3>
             <p className="text-dark mb-1">
@@ -308,7 +385,10 @@ export default function SupportAtHome() {
               />
             </div>
 
-            <h4 className="fw-bold heading dark-text mb-3">
+            <h4
+              className="fw-bold heading dark-text mb-3"
+              id="support-home-pathways"
+            >
               Short-Term Pathways
             </h4>
             <div className="row g-3">
@@ -326,12 +406,15 @@ export default function SupportAtHome() {
           </div>
         </section>
 
-        {/* Why Choose & Pricing Section */}
+        {/* Why Choose & Contributions Section */}
         <section className="pb-5">
           <div className="container p-md-0">
             {/* Contributions Section */}
-            <div className="card rounded-4 border-0 shadow-sm">
-              <div className="card-body  text-center text-md-start">
+            <div
+              className="card rounded-4 border-0 shadow-sm"
+              id="support-home-contributions"
+            >
+              <div className="card-body text-center text-md-start">
                 <h5 className="fw-bold heading dark-text mb-3">
                   Support at Home - Contributions
                 </h5>
@@ -371,7 +454,10 @@ export default function SupportAtHome() {
         </section>
 
         {/* Price List Section */}
-        <section className="py-5 testimonal">
+        <section
+          className="py-5 testimonal"
+          id="support-home-price-list"
+        >
           <div className="container">
             {/* CTA Section */}
             <div className="row mt-4 justify-content-center">
@@ -403,7 +489,10 @@ export default function SupportAtHome() {
             {/* FAQ Section */}
             <div className="row py-3 py-md-5">
               <div className="col-12">
-                <h3 className="fw-bold heading dark-text mb-4 text-center text-md-start">
+                <h3
+                  className="fw-bold heading dark-text mb-4 text-center text-md-start"
+                  id="support-home-faq"
+                >
                   Support at Home – FAQs
                 </h3>
 
@@ -466,7 +555,7 @@ export default function SupportAtHome() {
             </div>
 
             {/* CTA Section */}
-            <div className="row mt-4">
+            <div className="row mt-4" id="support-home-cta">
               <div className="col-12">
                 <div
                   className="rounded-4 shadow-sm px-3 px-md-4 px-lg-5 py-3 py-md-4"
@@ -521,7 +610,7 @@ export default function SupportAtHome() {
             modalRef={modalRef}
             videoRef={videoRef}
             selectedCareTitle="Support At Home"
-            selectedCareOptions={supportAtHomeOptions} // Pass the Support At Home features
+            selectedCareOptions={supportAtHomeOptions}
           />
         </div>
       )}

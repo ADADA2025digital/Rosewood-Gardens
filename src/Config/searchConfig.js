@@ -1,4 +1,167 @@
 export const PAGE_SEARCH_CONFIG = {
+  // Support at home Page 
+    supportAtHome: [
+    {
+      label: "Support at Home – Overview",
+      path: "/support-at-home",
+      sectionId: "support-home-hero",
+      keywords: [
+        "support at home",
+        "home care",
+        "stay at home",
+        "care at home",
+        "support program",
+        "older australians",
+        "live well at home"
+      ],
+    },
+    {
+      label: "Support at Home – Care in Your Own Home",
+      path: "/support-at-home",
+      sectionId: "support-home-care-at-home",
+      keywords: [
+        "care in your own home",
+        "nursing at home",
+        "personal care",
+        "domestic assistance",
+        "home help",
+        "in-home support"
+      ],
+    },
+    {
+      label: "Support at Home – Care at Rosewood Gardens",
+      path: "/support-at-home",
+      sectionId: "support-home-care-at-rosewood",
+      keywords: [
+        "care at rosewood gardens",
+        "short stay",
+        "respite",
+        "community connection",
+        "therapy at facility",
+        "residential day programs"
+      ],
+    },
+    {
+      label: "Support at Home – Service Categories",
+      path: "/support-at-home",
+      sectionId: "support-home-categories",
+      keywords: [
+        "clinical supports",
+        "independence",
+        "everyday living",
+        "service categories",
+        "nursing",
+        "allied health",
+        "transport",
+        "meals",
+        "gardening"
+      ],
+    },
+    {
+      label: "Support at Home – How It Works",
+      path: "/support-at-home",
+      sectionId: "support-home-how-it-works",
+      keywords: [
+        "how support at home works",
+        "quarterly budgets",
+        "10% care management",
+        "care management",
+        "statements",
+        "rollover funds",
+        "budget",
+        "funding structure"
+      ],
+    },
+    {
+      label: "Support at Home – Assistive Technology & Home Modifications",
+      path: "/support-at-home",
+      sectionId: "support-home-at-hm",
+      keywords: [
+        "assistive technology",
+        "AT-HM",
+        "home modifications",
+        "equipment",
+        "rails",
+        "ramps",
+        "independent and safe",
+        "at home equipment"
+      ],
+    },
+    {
+      label: "Support at Home – Short-Term Pathways",
+      path: "/support-at-home",
+      sectionId: "support-home-pathways",
+      keywords: [
+        "short term pathways",
+        "transition support",
+        "short stays",
+        "reablement",
+        "step-down care",
+        "after hospital",
+        "pathways"
+      ],
+    },
+    {
+      label: "Support at Home – Contributions",
+      path: "/support-at-home",
+      sectionId: "support-home-contributions",
+      keywords: [
+        "contributions",
+        "fees",
+        "costs",
+        "no contributions",
+        "5–25%",
+        "17.5–85%",
+        "government contributions",
+        "participant contribution"
+      ],
+    },
+    {
+      label: "Support at Home – Price List",
+      path: "/support-at-home",
+      sectionId: "support-home-price-list",
+      keywords: [
+        "support at home price list",
+        "pricing",
+        "hourly rate",
+        "service prices",
+        "view price list",
+        "detailed pricing"
+      ],
+    },
+    {
+      label: "Support at Home – FAQs",
+      path: "/support-at-home",
+      sectionId: "support-home-faq",
+      keywords: [
+        "support at home faq",
+        "faq",
+        "support at home questions",
+        "care management 10%",
+        "unspent funds",
+        "rollover",
+        "equipment included",
+        "home modifications included",
+        "do i need to pay",
+        "when does support at home start"
+      ],
+    },
+    {
+      label: "Support at Home – Get Started",
+      path: "/support-at-home",
+      sectionId: "support-home-cta",
+      keywords: [
+        "book a care plan call",
+        "get started",
+        "ready to get started",
+        "talk to care manager",
+        "care plan",
+        "support at home contact"
+      ],
+    },
+  ],
+
+
   // Facilities Page
     facilities: [
     {
