@@ -1,18 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import heroImg from "../assets/26.png";
 import { jobData, seoData } from "../Constants/Data";
 import NewsletterSection from "../Components/Newsletter";
 import JobCard from "../Components/JobCard";
 import SeoHead from "../Components/SeoHead";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function Career() {
+  const [searchParams] = useSearchParams();
   const [isPaused, setIsPaused] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  const totalPages = Math.ceil(jobData.length / itemsPerPage);
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
 
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    if (!targetId) {
+      targetId = q;
+    }
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180;
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
+
+  const totalPages = Math.ceil(jobData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentJobs = jobData.slice(startIndex, startIndex + itemsPerPage);
 
@@ -29,20 +67,15 @@ export default function Career() {
                 {/* Left: Text Content */}
                 <div className="col-md-6 mb-4 mb-lg-0 text-white text-center text-md-start">
                   <p className="fs-4 fw-bold dark-text">CAREERS</p>
-                  <h1 className="fw-bold text-dark heading display-3">
+                  <h1 className="fw-bold text-dark heading display-3" id="career-overview">
                     Be the Reason They
                     <span className="dark-text"> Smile Today </span>
                   </h1>
                   <p className="lead text-dark">
-                    Whether you’re a caregiver, nurse, or volunteer, your time
-                    and heart can change someone’s day - or even their life.
+                    Whether you're a caregiver, nurse, or volunteer, your time
+                    and heart can change someone's day - or even their life.
                     Come serve with compassion.. View Openings
                   </p>
-                  {/* <GlobalButton
-                    text="Join Today"
-                    variant="buttonv1"
-                    onClick={() => setShowModal(true)}
-                  /> */}
                 </div>
 
                 {/* Right: Image */}
@@ -50,68 +83,13 @@ export default function Career() {
                   <img
                     src={heroImg}
                     alt="Care Image"
-                    className="img-fluid rounded-5 w-100" // Ensures the image is responsive
+                    className="img-fluid rounded-5 w-100"
                   />
                 </div>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Team section */}
-        {/* <section className="py-5 bg-white">
-          <div className="container">
-            <div className="text-center">
-              <small className="text-uppercase fw-semibold">
-                WHY CHOOSE US?
-              </small>
-              <h1 className="heading fw-bold mt-3">
-                Our Work. Their Comfort. Our Promise
-              </h1>
-            </div>
-
-            <div className="row mt-5">
-              {careData.map((team, index) => (
-                <div key={index} className="col-md-6 mb-4">
-                  <div className="card border-0 team-card shadow rounded-4 p-4 d-flex flex-column h-100">
-                    <div className="card-bodyd-flex text-start">
-                      <h5 className="card-title heading dark-text fw-semibold">
-                        {team.title}
-                      </h5>
-                      <p className="card-text small">{team.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="logo-carousel-container mx-auto my-2 py-2 px-0 overflow-hidden position-relative"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <div
-              className="logo-carousel d-flex gap-4"
-              style={{
-                animationPlayState: isPaused ? "paused" : "running",
-              }}
-            >
-              {profiles.concat(profiles).map((logo, index) => (
-                <div
-                  className="logo-item d-flex align-items-end rounded-3 justify-content-center col-md-2 overflow-hidden"
-                  key={index}
-                >
-                  <img
-                    src={logo}
-                    alt={`Logo ${index + 1}`}
-                    className="w-100 object-fit-cover rounded-3"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section> */}
 
         {/* Job Openings Section */}
         <section className="py-5 bg-light">
@@ -120,7 +98,7 @@ export default function Career() {
               <small className="text-uppercase fw-semibold">
                 JOIN OUR TEAM
               </small>
-              <h1 className="heading fw-bold mt-3">
+              <h1 className="heading fw-bold mt-3" id="job-openings">
                 Support That Starts With Truly Knowing You
               </h1>
             </div>
@@ -153,10 +131,7 @@ export default function Career() {
                           style={{ cursor: "pointer" }}
                           onClick={() => setCurrentPage(page)}
                         >
-                          <span
-                            className="page-link p-0 
-                        "
-                          >
+                          <span className="page-link p-0">
                             <i className="bi bi-dash"></i>
                           </span>
                         </li>

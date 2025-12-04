@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
 import GlobalButton from "../Components/Button";
 import {
   pricelistPageData,
@@ -8,13 +9,51 @@ import {
   servicesData,
 } from "../Constants/Data";
 import Hero from "../assets/DSC01424.jpg";
-import Logo from "../assets/logo.png";
 import NewsletterSection from "../Components/Newsletter";
 import ServiceDetails from "../Components/ServiceDetails";
 import { useNavigate } from "react-router-dom";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function PriceList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    if (!targetId) {
+      targetId = q;
+    }
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180;
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   const scrollToServices = () => {
     navigate("/?scrollTo=services");
@@ -44,6 +83,7 @@ export default function PriceList() {
   const supportAtHomeOptions = supportAtHomeData
     ? supportAtHomeData.features
     : [];
+    
   useEffect(() => {
     if (showModal) {
       document.body.style.overflow = "hidden";
@@ -54,10 +94,10 @@ export default function PriceList() {
       document.body.style.overflow = "auto";
     };
   }, [showModal]);
+  
   // Function to handle opening the modal
   const handleOpenModal = () => {
     setShowModal(true);
-    // Prevent body scrolling when modal is open
     document.body.style.overflow = "hidden";
   };
 
@@ -129,8 +169,7 @@ export default function PriceList() {
               <div className="row align-items-center">
                 {/* Left: Text Content */}
                 <div className="col-md-6 text-white text-center text-md-start">
-
-                  <h1 className="fw-bold text-dark heading display-3">
+                  <h1 className="fw-bold text-dark heading display-3" id="price-list-overview">
                     Live well at home or at{" "}
                     <span className="dark-text"> Rosewood Gardens </span>
                   </h1>
@@ -158,7 +197,7 @@ export default function PriceList() {
         {/* Price List Section */}
         <section className="py-5 testimonal">
           <div className="container">
-            <h2 className="text-center dark-text heading fw-bold mb-1">
+            <h2 className="text-center dark-text heading fw-bold mb-1" id="price-list-main">
               Support at Home - Price List
             </h2>
             <p className="text-center text-muted mb-4">
@@ -235,7 +274,7 @@ export default function PriceList() {
             {/* FAQ Section */}
             <div className="row py-3 py-md-5">
               <div className="col-12">
-                <h3 className="fw-bold heading dark-text mb-4 text-center text-md-start">
+                <h3 className="fw-bold heading dark-text mb-4 text-center text-md-start" id="faq-section">
                   Support at Home – FAQs
                 </h3>
 
@@ -306,7 +345,7 @@ export default function PriceList() {
                 >
                   <div className="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center justify-content-between gap-3">
                     <div className="text-center text-lg-start">
-                      <h6 className="fw-bold heading dark-text mb-2">
+                      <h6 className="fw-bold heading dark-text mb-2" id="get-started">
                         Ready to get started?
                       </h6>
                       <p className="mb-0 text-dark">
