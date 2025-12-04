@@ -748,6 +748,169 @@ export const PAGE_SEARCH_CONFIG = {
       ],
     },
   ],
+
+  // Contact Component
+  contactComponent: [
+    {
+      label: "Contact – Form",
+      path: "/",
+      sectionId: "form",
+      keywords: [
+        "form",
+        "enquiry",
+        "message",
+        "contact form",
+        "enquiry form",
+        "send enquiry",
+        "submit enquiry",
+        "book a call",
+        "request a callback",
+        "request information",
+        "ask a question",
+        "apply for support",
+        "care enquiry",
+        "ndis enquiry",
+        "hcp enquiry",
+        "home care enquiry",
+        "aged care enquiry",
+      ],
+    },
+  ],
+
+  // Newsletter Component
+  newsletter: [
+    {
+      label: "Newsletter – Subscribe",
+      path: "/",
+      sectionId: "newsletter-section",
+      keywords: [
+        "newsletter",
+        "subscribe",
+        "email newsletter",
+        "newsletter signup",
+        "subscribe to newsletter",
+        "newsletter subscription",
+        "email updates",
+        "email subscription",
+        "updates",
+        "alerts",
+        "notifications",
+        "email alerts",
+        "stay updated",
+        "keep in touch",
+        "subscribe for updates",
+        "care updates",
+        "service updates",
+        "community events",
+        "enhancing lives",
+        "subscribe now",
+        "mailing list",
+        "newsletter form",
+        "subscription form",
+        "get updates",
+        "receive updates",
+        "latest news",
+        "what's new",
+        "new services",
+        "event notifications",
+        "care services newsletter",
+        "rosewood gardens newsletter",
+        "aged care newsletter",
+        "disability care newsletter",
+        "ndis updates",
+        "hcp updates",
+        "home care updates",
+        "residential care news",
+        "care tips",
+        "wellbeing tips",
+        "family resources",
+        "caregiver resources",
+      ],
+    },
+  ],
+
+  // careerBanner Component
+  careerBanner: [
+    {
+      label: "Career – Quality Promise",
+      path: "/",
+      sectionId: "career-banner-section",
+      keywords: [
+        // Core Concepts
+        "quality promise",
+        "quality commitment",
+        "continuous improvement",
+        "quality assurance",
+        "quality standards",
+        "care quality",
+        "service quality",
+        "quality care",
+
+        // Safety & Security
+        "safety",
+        "safety & screening",
+        "background checks",
+        "staff screening",
+        "vetting process",
+        "safety protocols",
+        "security screening",
+
+        // Training & Development
+        "training",
+        "ongoing training",
+        "staff training",
+        "competency checks",
+        "professional development",
+        "skills development",
+        "best practice training",
+        "supervision",
+
+        // Standards & Compliance
+        "national aged care quality standards",
+        "ndis practice standards",
+        "compliance",
+        "regulatory standards",
+        "quality standards",
+        "accreditation",
+        "certification",
+
+        // Improvement Processes
+        "continuous improvement",
+        "feedback reviews",
+        "incident reviews",
+        "internal audits",
+        "service reviews",
+        "quality improvement",
+        "audit processes",
+
+        // Brand Trust
+        "commitment to quality",
+        "rosewood gardens quality",
+        "trusted care provider",
+        "reliable services",
+        "professional standards",
+
+        // Alternative Terms
+        "our promise",
+        "our commitment",
+        "quality framework",
+        "care standards",
+        "safety measures",
+        "training programs",
+        "quality system",
+        "assurance processes",
+
+        // Intent-Based
+        "how we ensure quality",
+        "our quality approach",
+        "quality management",
+        "safety procedures",
+        "staff qualifications",
+        "meeting standards",
+        "exceeding standards",
+      ],
+    },
+  ],
 };
 
 export const SEARCH_ITEMS = Object.values(PAGE_SEARCH_CONFIG).flat();

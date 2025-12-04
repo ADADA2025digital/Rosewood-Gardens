@@ -1,11 +1,77 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import CareerImage from "../assets/3.png";
 import GlobalButton from "./Button";
 import { Link } from "react-router-dom";
 
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
+
 const CareerBanner = () => {
+  const [searchParams] = useSearchParams();
+
+  // Handle search parameter to scroll to career banner section
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match if there is no exact key
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only scroll if the target is the career banner section
+    if (targetId === "career-banner-section") {
+      // Give the component time to mount
+      setTimeout(() => {
+        const careerElement = document.getElementById("career-banner-section");
+        if (careerElement) {
+          const HEADER_HEIGHT = 160; // Adjust to your header height
+          const elementY = careerElement.getBoundingClientRect().top + window.scrollY;
+          const offsetY = elementY - HEADER_HEIGHT;
+
+          window.scrollTo({
+            top: offsetY,
+            behavior: "smooth",
+          });
+
+          // Optional: Add a highlight effect
+          careerElement.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.5)";
+          careerElement.style.transition = "box-shadow 0.3s ease";
+          
+          setTimeout(() => {
+            if (careerElement) {
+              careerElement.style.boxShadow = "";
+            }
+          }, 2000);
+
+          // Optional: Add a subtle animation to the list items
+          const listItems = careerElement.querySelectorAll('li');
+          listItems.forEach((item, index) => {
+            setTimeout(() => {
+              item.style.transform = "translateX(0)";
+              item.style.opacity = "1";
+            }, 100 * index);
+          });
+        }
+      }, 300);
+    }
+  }, [searchParams]);
+
   return (
-    <section className="bg-white py-5">
+    <section 
+      id="career-banner-section"
+      className="bg-white py-5"
+    >
       <small className="text-uppercase dark-text fw-semibold fs-5 mb-3">
         Our Quality Promise
       </small>
@@ -34,15 +100,22 @@ const CareerBanner = () => {
           {/* Right Side Content */}
           <div className="col-12 col-lg-7 text-white text-start d-flex flex-column p-0 p-lg-4">
             <h2 className="text-white fw-semibold pb-2">That means</h2>
-            <ul className="list-unstyled  text-white">
-              <li className="d-flex gap-2 mb-2">
+            <ul className="list-unstyled text-white">
+              <li 
+                className="d-flex gap-2 mb-2"
+                style={{
+                  opacity: 0,
+                  transform: "translateX(-20px)",
+                  transition: "opacity 0.3s ease, transform 0.3s ease"
+                }}
+              >
                 <span
                   className="d-flex align-items-center justify-content-center"
                   style={{
                     width: "43px",
                     height: "37px",
                     borderRadius: "50%",
-                    background: "rgba(255, 255, 255,0.3",
+                    background: "rgba(255, 255, 255,0.3)",
                   }}
                 >
                   <i className="bi bi-shield-check"></i>
@@ -56,14 +129,21 @@ const CareerBanner = () => {
                 </div>
               </li>
 
-              <li className="d-flex gap-2 mb-2">
+              <li 
+                className="d-flex gap-2 mb-2"
+                style={{
+                  opacity: 0,
+                  transform: "translateX(-20px)",
+                  transition: "opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s"
+                }}
+              >
                 <span
                   className="d-flex align-items-center justify-content-center"
                   style={{
-                     width: "43px",
+                    width: "43px",
                     height: "37px",
                     borderRadius: "50%",
-                    background: "rgba(255, 255, 255,0.3",
+                    background: "rgba(255, 255, 255,0.3)",
                   }}
                 >
                   <i className="bi bi-mortarboard"></i>
@@ -77,14 +157,21 @@ const CareerBanner = () => {
                 </div>
               </li>
 
-              <li className="d-flex gap-2 mb-2">
+              <li 
+                className="d-flex gap-2 mb-2"
+                style={{
+                  opacity: 0,
+                  transform: "translateX(-20px)",
+                  transition: "opacity 0.3s ease 0.2s, transform 0.3s ease 0.2s"
+                }}
+              >
                 <span
                   className="d-flex align-items-center justify-content-center"
                   style={{
-                     width: "43px",
+                    width: "43px",
                     height: "37px",
                     borderRadius: "50%",
-                    background: "rgba(255, 255, 255,0.3",
+                    background: "rgba(255, 255, 255,0.3)",
                   }}
                 >
                   <i className="bi bi-arrow-repeat"></i>
@@ -98,14 +185,21 @@ const CareerBanner = () => {
                 </div>
               </li>
 
-              <li className="d-flex gap-2">
+              <li 
+                className="d-flex gap-2"
+                style={{
+                  opacity: 0,
+                  transform: "translateX(-20px)",
+                  transition: "opacity 0.3s ease 0.3s, transform 0.3s ease 0.3s"
+                }}
+              >
                 <span
                   className="d-flex align-items-center justify-content-center"
                   style={{
-                     width: "43px",
+                    width: "43px",
                     height: "37px",
                     borderRadius: "50%",
-                    background: "rgba(255, 255, 255,0.3",
+                    background: "rgba(255, 255, 255,0.3)",
                   }}
                 >
                   <i className="bi bi-patch-check"></i>

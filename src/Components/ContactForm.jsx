@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom"; // ✅ NEW
 import emailjs from "@emailjs/browser";
 import countryList from "react-select-country-list";
 import bgImage from "../assets/2.png";
 import GlobalButton from "./Button";
 import InputBox from "./InputBox";
 import TextBox from "./TextBox";
+
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig"; 
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +27,9 @@ const ContactForm = () => {
   const [recaptchaWidgetId, setRecaptchaWidgetId] = useState(null);
   const recaptchaRef = useRef(null);
 
+  // ✅ For reading ?search= from URL
+  const [searchParams] = useSearchParams();
+
   // EmailJS configuration
   const EMAILJS_SERVICE_ID = "service_24g96ge";
   const EMAILJS_TEMPLATE_ID = "template_v6vl8rv";
@@ -40,6 +46,50 @@ const ContactForm = () => {
   };
 
   const requiredFields = ["full_name", "phone", "email", "message"];
+
+  // ✅ SCROLL LOGIC – specific to the contact component
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // Fuzzy match: if no exact keyword, try "includes"
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only allow IDs relevant to this component
+    // This uses PAGE_SEARCH_CONFIG.contactComponent (sectionId: "form")
+    const CONTACT_SECTION_IDS = new Set([
+      "form",          // Contact component section
+      // add more IDs here if you reuse the component elsewhere
+    ]);
+
+    if (!targetId || !CONTACT_SECTION_IDS.has(targetId)) return;
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 160; // adjust: your global header height
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   // Initialize EmailJS
   useEffect(() => {
@@ -148,7 +198,7 @@ const ContactForm = () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        to_email: "info@rosewoodgardens.com.au", // Add recipient email
+        to_email: "info@rosewoodgardens.com.au",
       };
 
       console.log("Sending email with params:", templateParams);
@@ -169,7 +219,6 @@ const ContactForm = () => {
         errorMessage: error.message,
       });
 
-      // More specific error handling
       if (error.code === 400) {
         console.error("400 Error - Likely template parameter issues");
         console.error(
@@ -220,7 +269,6 @@ const ContactForm = () => {
     if (Object.keys(newErrors).length === 0) {
       setIsSubmitting(true);
       try {
-        // First, send the form data to your API
         const submitData = { ...formData };
         if (recaptchaToken) {
           submitData.recaptchaToken = recaptchaToken;
@@ -241,7 +289,6 @@ const ContactForm = () => {
 
         await response.json();
 
-        // Then, send the email notification
         const emailSent = await sendEmailNotification(formData);
 
         if (!emailSent) {
@@ -262,7 +309,6 @@ const ContactForm = () => {
         setErrors({});
         setSubmitted(false);
 
-        // Reset reCAPTCHA
         if (window.grecaptcha && recaptchaWidgetId !== null) {
           window.grecaptcha.reset(recaptchaWidgetId);
         }
@@ -289,7 +335,11 @@ const ContactForm = () => {
       }}
     >
       <div className="container p-3 p-sm-3 p-lg-5">
-        <div className="col-lg-5 rounded-4 p-3 p-sm-3 p-lg-5 bg-white text-start shadow-sm position-relative">
+        {/* ✅ give this an ID matching sectionId: "form" */}
+        <div
+          id="form"
+          className="col-lg-5 rounded-4 p-3 p-sm-3 p-lg-5 bg-white text-start shadow-sm position-relative"
+        >
           <h1 className="form-title fw-bold fs-3 heading">
             Speak to Our Care Team
           </h1>
@@ -368,7 +418,6 @@ const ContactForm = () => {
               />
             </div>
 
-            {/* reCAPTCHA - only show when message is long enough and reCAPTCHA is ready */}
             {formData.message.length >= 10 && recaptchaReady && (
               <div className="my-3">
                 <div ref={recaptchaRef} />
