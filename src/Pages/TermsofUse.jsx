@@ -1,25 +1,67 @@
+import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import heroImg from "../assets/20.png";
 import NewsletterSection from "../Components/Newsletter";
 import SeoHead from "../Components/SeoHead";
 import { seoData } from "../Constants/Data";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function TermofUse() {
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    if (!targetId) {
+      targetId = q;
+    }
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180;
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
+
   return (
     <>
       <SeoHead {...seoData.terms} />
 
       <div className="container-fluid p-0">
-        {/* Frist section */}
+        {/* First section - Who we are */}
         <section className="testimonal mt-5 py-5">
           <div className="container mt-5 py-5">
             <div className="row flex-lg-row flex-column">
               <div className="col-lg-6 col-12 text-start">
-                <h1 className="heading mb-4">Terms of Use</h1>
+                <h1 className="heading mb-4" id="terms-overview">Terms of Use</h1>
                 <p className="small">
                   Please read these terms carefully before using our website.
                 </p>
 
-                <h5 className="fw-bold heading text-dark mt-3">Who we are</h5>
+                <h5 className="fw-bold heading text-dark mt-3" id="who-we-are">Who we are</h5>
                 <p className="small">
                   This website is operated by BKV Aged Care Pty Ltd (ABN 87 635
                   762 612), trading as Rosewood Gardens ("Rosewood Gardens",
@@ -30,7 +72,7 @@ export default function TermofUse() {
                   </a>
                   .
                 </p>
-                <h5 className="fw-bold heading text-dark mt-3">
+                <h5 className="fw-bold heading text-dark mt-3" id="website-content">
                   Website content
                 </h5>
                 <p className="small">
@@ -40,7 +82,7 @@ export default function TermofUse() {
                   call 000.
                 </p>
 
-                <h5 className="fw-bold heading text-dark mt-3">
+                <h5 className="fw-bold heading text-dark mt-3" id="your-responsibilities">
                   Your responsibilities
                 </h5>
                 <ul className="list-unstyled">
@@ -87,10 +129,9 @@ export default function TermofUse() {
                     maxWidth: "800px",
                     height: "auto",
                     aspectRatio: "3 / 2",
-                    backgroundColor: "#f8f9fa", // optional, for contrast
+                    backgroundColor: "#f8f9fa",
                   }}
                 >
-                  {" "}
                   <img
                     className="w-100 h-100 object-fit-cover"
                     style={{
@@ -104,7 +145,7 @@ export default function TermofUse() {
             </div>
 
             <div className="row text-start mt-5 mt-lg-0">
-              <h5 className="fw-bold heading text-dark mt-3">
+              <h5 className="fw-bold heading text-dark mt-3" id="intellectual-property">
                 Intellectual property
               </h5>
               <p className="small">
@@ -114,16 +155,18 @@ export default function TermofUse() {
                 our prior written consent, except as permitted by law.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
-                Thirdparty sites
+              <h5 className="fw-bold heading text-dark mt-3" id="third-party-sites">
+                Third-party sites
               </h5>
               <p className="small">
-                Links to thirdparty sites are provided for convenience. We do
+                Links to third-party sites are provided for convenience. We do
                 not control and are not responsible for their content or
                 practices.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">Liability</h5>
+              <h5 className="fw-bold heading text-dark mt-3" id="liability">
+                Liability
+              </h5>
               <p className="small">
                 To the maximum extent permitted by law, we exclude all
                 warranties and are not liable for any loss, damage or cost
@@ -133,14 +176,16 @@ export default function TermofUse() {
                 excluded, restricted or modified.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">Indemnity</h5>
+              <h5 className="fw-bold heading text-dark mt-3" id="indemnity">
+                Indemnity
+              </h5>
               <p className="small">
                 You indemnify us and our officers, employees and contractors
                 against claims, loss or liability arising from your breach of
                 these Terms or misuse of the site.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
+              <h5 className="fw-bold heading text-dark mt-3" id="changes-to-terms">
                 Changes to the site and terms
               </h5>
               <p className="small">
@@ -148,13 +193,17 @@ export default function TermofUse() {
                 Terms apply from the date published on this page.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">Governing law</h5>
+              <h5 className="fw-bold heading text-dark mt-3" id="governing-law">
+                Governing law
+              </h5>
               <p className="small">
                 These Terms are governed by the laws of Victoria, Australia. The
-                courts of Victoria have nonexclusive jurisdiction.
+                courts of Victoria have non-exclusive jurisdiction.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">Contact </h5>
+              <h5 className="fw-bold heading text-dark mt-3" id="contact-terms">
+                Contact
+              </h5>
               <p className="small">
                 Questions about these Terms: {"  "}
                 <a

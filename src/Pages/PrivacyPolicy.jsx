@@ -1,20 +1,64 @@
+import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import heroImg from "../assets/20.png";
 import NewsletterSection from "../Components/Newsletter";
 import SeoHead from "../Components/SeoHead";
 import { seoData } from "../Constants/Data";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function PrivacyPolicy() {
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    if (!targetId) {
+      targetId = q;
+    }
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180;
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
+
   return (
     <>
       <SeoHead {...seoData.privacypolicy} />
 
       <div className="container-fluid p-0">
-        {/* Frist section */}
+        {/* First section */}
         <section className="testimonal mt-5 py-5">
           <div className="container mt-5 py-5">
             <div className="row flex-lg-row flex-column">
               <div className="col-lg-6 col-12 text-start">
-                <h1 className="heading mb-4">Privacy Policy</h1>
+                <h1 className="heading mb-4" id="privacy-policy-overview">
+                  Privacy Policy
+                </h1>
 
                 <p className="small">
                   <strong>Last updated </strong>: 3 September 2025 <br />
@@ -30,7 +74,7 @@ export default function PrivacyPolicy() {
                   </a>
                 </p>
 
-                <h5 className="fw-bold heading text-dark mt-3">
+                <h5 className="fw-bold heading text-dark mt-3" id="at-a-glance">
                   1) At a glance
                 </h5>
                 <ul className="list-unstyled">
@@ -104,10 +148,9 @@ export default function PrivacyPolicy() {
                     maxWidth: "900px",
                     height: "auto",
                     aspectRatio: "3 / 2",
-                    backgroundColor: "#f8f9fa", // optional, for contrast
+                    backgroundColor: "#f8f9fa",
                   }}
                 >
-                  {" "}
                   <img
                     className="w-100 h-100 object-fit-cover"
                     style={{
@@ -121,14 +164,14 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="row text-start mt-5 mt-lg-0">
-              <h5 className="fw-bold heading text-dark mt-3">
-                2) Who we are and scope{" "}
+              <h5 className="fw-bold heading text-dark mt-3" id="who-we-are-scope">
+                2) Who we are and scope
               </h5>
               <p className="small">
                 This policy explains how{" "}
                 <strong>BKV Aged Care Pty Ltd (ABN 87 635 762 612)</strong>,
-                trading as <strong>Rosewood Gardens</strong> (“Rosewood
-                Gardens”, “we”, “us”, “our”), collects, uses, discloses and
+                trading as <strong>Rosewood Gardens</strong> ("Rosewood
+                Gardens", "we", "us", "our"), collects, uses, discloses and
                 protects personal information when you: - visit our websites and
                 digital channels; - enquire about or receive our services
                 (residential care, in‑home care, disability supports including
@@ -141,7 +184,7 @@ export default function PrivacyPolicy() {
                 and <strong>Clinical Disclaimer.</strong>{" "}
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
+              <h5 className="fw-bold heading text-dark mt-3" id="what-we-collect">
                 3) What we collect
               </h5>
               <p className="small">
@@ -171,7 +214,7 @@ export default function PrivacyPolicy() {
                 otherwise permitted by law.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
+              <h5 className="fw-bold heading text-dark mt-3" id="how-we-collect">
                 4) How we collect
               </h5>
               <ul className="list-unstyled">
@@ -231,8 +274,8 @@ export default function PrivacyPolicy() {
                 be unable to provide some services.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
-                5) Why we use your information{" "}
+              <h5 className="fw-bold heading text-dark mt-3" id="why-we-use">
+                5) Why we use your information
               </h5>
               <p className="small">
                 We use personal information to: - deliver, coordinate and
@@ -246,13 +289,13 @@ export default function PrivacyPolicy() {
                 improvement); <br />
                 - recruit, train and manage staff and contractors; <br />
                 - operate and improve our websites, apps and services; <br />
-                - send service updates and information you’ve opted to receive
+                - send service updates and information you've opted to receive
                 (you can unsubscribe at any time). <br /> <br />
                 We <strong>do not sell</strong> your personal information.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
-                6) When we disclose information{" "}
+              <h5 className="fw-bold heading text-dark mt-3" id="when-we-disclose">
+                6) When we disclose information
               </h5>
               <p className="small">
                 We may disclose personal information to: - your authorised
@@ -282,8 +325,8 @@ export default function PrivacyPolicy() {
                 <strong>establish, exercise or defend legal claims</strong>.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
-                7) Overseas disclosure{" "}
+              <h5 className="fw-bold heading text-dark mt-3" id="overseas-disclosure">
+                7) Overseas disclosure
               </h5>
               <p className="small">
                 Some service providers may store data in Australia or overseas
@@ -293,8 +336,8 @@ export default function PrivacyPolicy() {
                 contractual obligations.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-3">
-                8) Direct marketing and preferences{" "}
+              <h5 className="fw-bold heading text-dark mt-3" id="direct-marketing">
+                8) Direct marketing and preferences
               </h5>
               <p className="small">
                 We may send you updates about services you use or may find
@@ -309,8 +352,8 @@ export default function PrivacyPolicy() {
                 . We comply with the <strong>Spam Act 2003 (Cth)</strong>.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
-                9) Cookies, analytics and notifications{" "}
+              <h5 className="fw-bold heading text-dark mt-4" id="cookies-analytics">
+                9) Cookies, analytics and notifications
               </h5>
               <p className="small">
                 Our websites use cookies and similar technologies to operate,
@@ -320,7 +363,7 @@ export default function PrivacyPolicy() {
                 can enable or disable them in your browser at any time.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
+              <h5 className="fw-bold heading text-dark mt-4" id="cctv-site-visitors">
                 10) CCTV and site visitors (if applicable)
               </h5>
               <p className="small">
@@ -331,7 +374,9 @@ export default function PrivacyPolicy() {
                 enforcement or regulators where required or authorised by law.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">11) Security </h5>
+              <h5 className="fw-bold heading text-dark mt-4" id="security">
+                11) Security
+              </h5>
               <p className="small">
                 We use technical, physical and organisational measures to
                 protect personal information, including role‑based access,
@@ -345,8 +390,8 @@ export default function PrivacyPolicy() {
                 <strong>Notifiable Data Breaches scheme</strong>.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
-                12) Retention and deletion{" "}
+              <h5 className="fw-bold heading text-dark mt-4" id="retention-deletion">
+                12) Retention and deletion
               </h5>
               <p className="small">
                 We keep personal information only as long as necessary for care,
@@ -355,7 +400,7 @@ export default function PrivacyPolicy() {
                 applicable laws.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
+              <h5 className="fw-bold heading text-dark mt-4" id="access-correction">
                 13) Access and correction
               </h5>
               <p className="small">
@@ -368,11 +413,11 @@ export default function PrivacyPolicy() {
                   info@rosewoodgardens.com.au
                 </a>{" "}
                 and tell us what you need. We may need to verify your identity
-                and, if lawful, we’ll explain any limits on access.
+                and, if lawful, we'll explain any limits on access.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
-                14) Employment records{" "}
+              <h5 className="fw-bold heading text-dark mt-4" id="employment-records">
+                14) Employment records
               </h5>
               <p className="small">
                 For current and former employees, some handling of employee
@@ -384,7 +429,7 @@ export default function PrivacyPolicy() {
                 records.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
+              <h5 className="fw-bold heading text-dark mt-4" id="children-decision-making">
                 15) Children and supported decision‑making
               </h5>
               <p className="small">
@@ -393,7 +438,9 @@ export default function PrivacyPolicy() {
                 own choices wherever possible.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">16) Complaints</h5>
+              <h5 className="fw-bold heading text-dark mt-4" id="complaints">
+                16) Complaints
+              </h5>
               <p className="small">
                 If you have a privacy concern or wish to make a complaint,
                 contact us at{" "}
@@ -416,16 +463,18 @@ export default function PrivacyPolicy() {
                 .
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
+              <h5 className="fw-bold heading text-dark mt-4" id="changes-policy">
                 17) Changes to this policy
               </h5>
               <p className="small">
                 We may update this policy from time to time. The{" "}
-                <strong>“Last updated”</strong> date above reflects the latest
+                <strong>"Last updated"</strong> date above reflects the latest
                 version. Significant changes will be highlighted on this page.
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">18) Contact us</h5>
+              <h5 className="fw-bold heading text-dark mt-4" id="contact-us">
+                18) Contact us
+              </h5>
               <p className="small">
                 <strong>Rosewood Gardens</strong> (BKV Aged Care Pty Ltd, ABN 87
                 635 762 612) <br />
@@ -441,7 +490,7 @@ export default function PrivacyPolicy() {
                 full name and how we can contact you.{" "}
               </p>
 
-              <h5 className="fw-bold heading text-dark mt-4">
+              <h5 className="fw-bold heading text-dark mt-4" id="definitions">
                 19) Definitions (summary)
               </h5>
               <p className="small">
@@ -455,14 +504,6 @@ export default function PrivacyPolicy() {
                 <strong>NDB scheme</strong>: Notifiable Data Breaches scheme
                 under the Privacy Act.{" "}
               </p>
-
-              {/* <h5 className="fw-bold heading text-dark mt-4">Copyright</h5>
-              <p className="small">
-                <strong>© BKV Aged Care Pty Ltd </strong>(ABN 87 635 762 612).
-                All rights reserved. You may make a copy of this policy for your
-                personal records. Any other reproduction requires our prior
-                written consent.{" "}
-              </p> */}
             </div>
           </div>
         </section>
