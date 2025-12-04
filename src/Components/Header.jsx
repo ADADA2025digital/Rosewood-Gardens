@@ -80,7 +80,9 @@ export default function Header() {
 
       const inLabel = label.includes(q);
       const inKeywords = keywordsArray.some((kw) =>
-        String(kw || "").toLowerCase().includes(q)
+        String(kw || "")
+          .toLowerCase()
+          .includes(q)
       );
 
       return inLabel || inKeywords;
@@ -110,9 +112,7 @@ export default function Header() {
     if (e.key === "Enter" && searchResults.length > 0) {
       const matchedItem = searchResults[0];
 
-      const basePath = matchedItem.path
-        ? matchedItem.path.split("?")[0]
-        : "/";
+      const basePath = matchedItem.path ? matchedItem.path.split("?")[0] : "/";
 
       const q = searchQuery.trim();
       if (!q) return;
@@ -176,9 +176,9 @@ export default function Header() {
                 {/* SEARCH BOX */}
                 <div
                   className="position-relative"
-                  style={{ minWidth: "230px" }}
+                  style={{ minWidth: "300px" }}
                 >
-                  <div className="input-group input-group-sm">
+                  <div className="input-group search-box bg-white input-group-sm">
                     <span className="input-group-text border-end-0 bg-white">
                       <i className="bi bi-search" />
                     </span>
@@ -199,38 +199,46 @@ export default function Header() {
                   {/* SEARCH RESULTS DROPDOWN */}
                   {showSearchDropdown && searchQuery && (
                     <div
-                      className="position-absolute bg-white w-100 shadow-sm rounded mt-1"
+                      className="position-absolute bg-white w-100 shadow-sm mt-1 custom-search-dropdown"
                       style={{
                         zIndex: 1050,
-                        maxHeight: "260px",
-                        overflowY: "auto",
+                        maxHeight: "300px",
+                        borderBottom: "5px solid #8d173d",
                       }}
                       onMouseLeave={() => setShowSearchDropdown(false)}
                     >
-{searchResults.length > 0 ? (
-  searchResults.map((item) => (
-    <button
-      key={item.path + item.label}
-      type="button"
-      className="list-group-item list-group-item-action border-0 w-100 text-start small"
-      style={{ fontSize: "0.85rem" }}
-      onMouseDown={(e) => {
-        e.preventDefault(); // so blur doesn't cancel click
-        handleResultNavigate(item);
-      }}
-    >
-      <div className="fw-semibold">{item.label}</div>
-      {searchQuery && (
-        <div className="text-muted p-2 rounded-0">
-          <small>Searched: “{searchQuery}”</small>
-        </div>
-      )}
-    </button>
-  ))
-) : (
-  <div className="px-3 py-2 small text-muted">No results found</div>
-)}
-
+                      <div className="search-results-scroll-container">
+                        {searchResults.length > 0 ? (
+                          searchResults.map((item) => (
+                            <button
+                              key={item.path + item.label}
+                              type="button"
+                              className="list-group-item list-group-item-action border-0 w-100 text-start small py-2 px-3 search-result-item"
+                              style={{ fontSize: "0.85rem" }}
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                handleResultNavigate(item);
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "#f8f9fa";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+                              }}
+                            >
+                              <div className="fw-semibold small text-dark">
+                                {item.label}
+                              </div>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-3 py-2 small text-muted">
+                            No results found
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>

@@ -1445,3 +1445,24 @@ em-emoji-picker {
     font-size: 13px !important;
   }
 }
+
+/* Search bar */
+.search-box .form-control:focus {
+  border: 0;
+}
+
+.custom-search-dropdown {
+  overflow: hidden;
+}
+
+.search-results-scroll-container {
+  max-height: 300px;
+  overflow-y: scroll;
+  padding-right: 8px; 
+  margin-right: -8px; 
+}
+
+.search-results-scroll-container {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
