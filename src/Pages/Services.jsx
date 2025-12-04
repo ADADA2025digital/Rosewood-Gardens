@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useSearchParams } from "react-router-dom";
 import NewsletterSection from "../Components/Newsletter";
 import heroImg from "../assets/11.png";
 import middleImg from "../assets/DSC00770.jpg";
@@ -8,15 +9,54 @@ import { leftData, rightData, seoData, servicesData } from "../Constants/Data";
 import GlobalButton from "../Components/Button";
 import ServiceDetails from "../Components/ServiceDetails";
 import SeoHead from "../Components/SeoHead";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
 
 export default function Services() {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [activeTab, setActiveTab] = useState("facility");
+  const [searchParams] = useSearchParams();
 
   const contentRef = useRef(null);
   const [height, setHeight] = useState(0);
   const detailsSectionRef = useRef(null);
+
+    useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword)) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    if (!targetId) {
+      targetId = q;
+    }
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180;
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   useEffect(() => {
     if (showDetails && contentRef.current) {
@@ -208,7 +248,7 @@ export default function Services() {
                 {/* Left: Text Content */}
                 <div className="col-md-6 text-white text-center text-md-start">
                   <p className="fs-4 fw-bold dark-text">TAILORED SERVICES</p>
-                  <h1 className="fw-bold text-dark heading display-3">
+                  <h1  id="services-overview" className="fw-bold text-dark heading display-3">
                     Comprehensive{" "}
                     <span className="dark-text">
                       {" "}
@@ -241,7 +281,7 @@ export default function Services() {
             <small className="text-uppercase dark-text fw-semibold">
               OUR SERVICES
             </small>
-            <h1 className="heading fw-bold">
+            <h1 id="our-services" className="heading fw-bold">
               Dignity, <span className="dark-text">Comfort & Support</span> for{" "}
               <br />
               Every Stage of Life
@@ -269,7 +309,7 @@ export default function Services() {
               </div>
             </div>
 
-            <p>Choose one of our care options:</p>
+            <p id="care-options">Choose one of our care options:</p>
 
             <div className="position-relative">
               <div className="row mt-5 d-flex justify-content-center align-items-stretch">
@@ -371,7 +411,7 @@ export default function Services() {
               <small className="text-uppercase dark-text fw-semibold mb-2">
                 WHY CHOOSE US
               </small>
-              <h1 className="heading fw-semibold">
+              <h1 id="why-choose-us" className="heading fw-semibold">
                 Helping You Live <span className="dark-text">Comfortably</span>{" "}
                 and <br /> <span className="dark-text">Confidently</span>
               </h1>
