@@ -1,4 +1,3 @@
-// src/Pages/FAQ.jsx
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import heroImg from "../assets/27.png";

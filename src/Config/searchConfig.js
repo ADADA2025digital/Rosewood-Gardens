@@ -1,4 +1,146 @@
 export const PAGE_SEARCH_CONFIG = {
+  // Facilities Page
+    facilities: [
+    {
+      label: "Facilities – Overview",
+      path: "/facilities",
+      sectionId: "facilities-overview",
+      keywords: [
+        "supported residential service",
+        "ashburton",
+        "aged care facility",
+        "disability care facility",
+        "supported residential aged care",
+        "private aged care",
+        "safe environment",
+      ],
+    },
+    {
+      label: "Facilities – Life at Rosewood Gardens",
+      path: "/facilities",
+      sectionId: "facilities-life",
+      keywords: [
+        "life at rosewood gardens",
+        "residential care",
+        "residential facility",
+        "activities",
+        "wellbeing",
+        "community",
+        "allied health",
+        "gardens",
+        "lounges",
+      ],
+    },
+    {
+      label: "Facilities – Residential Accommodation & Type of Care",
+      path: "/facilities",
+      sectionId: "facilities-accommodation",
+      keywords: [
+        "residential accommodation",
+        "type of care",
+        "24/7 nursing",
+        "clinical support",
+        "respite care",
+        "palliative care",
+        "post surgery",
+        "ageing in place",
+        "dementia support",
+        "tac approved",
+        "ndis provider",
+        "support at home provider",
+      ],
+    },
+    {
+      label: "Facilities – Feels Like Home",
+      path: "/facilities",
+      sectionId: "facilities-home-feel",
+      keywords: [
+        "feels like home",
+        "independence",
+        "dignity",
+        "family visits",
+        "personalised care",
+        "meaningful routines",
+        "homelike environment",
+      ],
+    },
+    {
+      label: "Facilities – Rooms & Amenities",
+      path: "/facilities",
+      sectionId: "facilities-amenities",
+      keywords: [
+        "facilities",
+        "single rooms",
+        "ensuite",
+        "dining room",
+        "lounges",
+        "activity rooms",
+        "hairdressing",
+        "library",
+        "landscaped gardens",
+        "gazebo",
+        "courtyard",
+      ],
+    },
+    {
+      label: "Facilities – Care Options",
+      path: "/facilities",
+      sectionId: "facilities-care-options",
+      keywords: [
+        "care options",
+        "24/7 nursing and clinical care",
+        "respite",
+        "palliative",
+        "ageing in place",
+        "ndis support",
+        "sil",
+        "support at home",
+        "tac",
+        "specialist dementia",
+        "high intensity ndis care",
+      ],
+    },
+    {
+      label: "Facilities – What Makes Us Different",
+      path: "/facilities",
+      sectionId: "facilities-what-makes-different",
+      keywords: [
+        "what makes rosewood gardens different",
+        "clinical excellence",
+        "dedicated staff assignment",
+        "nutritious dining",
+        "lifestyle programs",
+        "wellbeing programs",
+        "safety and security",
+      ],
+    },
+    {
+      label: "Facilities – Book a Tour",
+      path: "/facilities",
+      sectionId: "facilities-book-tour",
+      keywords: [
+        "book a tour",
+        "book a visit",
+        "facility tour",
+        "inspection",
+        "visit rosewood gardens",
+      ],
+    },
+    {
+      label: "Facilities – Photo Gallery",
+      path: "/facilities",
+      sectionId: "facilities-gallery",
+      keywords: [
+        "photos",
+        "gallery",
+        "pictures",
+        "images",
+        "see facility",
+        "virtual tour",
+      ],
+    },
+  ],
+
   // FAQ Page
   faq: [
     {
@@ -186,16 +328,6 @@ export const PAGE_SEARCH_CONFIG = {
       ],
     },
   ],
-
-  // later you can add more:
-  // services: [
-  //   {
-  //     label: "Services – Support at Home",
-  //     path: "/services",
-  //     sectionId: "support-at-home",
-  //     keywords: ["support at home", "home care", "in-home"],
-  //   },
-  // ],
 };
 
 export const SEARCH_ITEMS = Object.values(PAGE_SEARCH_CONFIG).flat();

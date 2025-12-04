@@ -1,4 +1,6 @@
+// src/Pages/Facilities.jsx
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import sideImg from "../assets/3.png";
 import {
   careoption,
@@ -11,9 +13,59 @@ import NewsletterSection from "../Components/Newsletter";
 import Gallery from "../Components/Gallerys";
 import GlobalButton from "../Components/Button";
 import SeoHead from "../Components/SeoHead";
+import { KEYWORD_TO_SECTION } from "../Config/searchConfig";
+
+// Map titles from facilitieslist → DOM ids
+const FACILITY_BLOCK_IDS = {
+  "Residential Accommodation & Type of Care": "facilities-accommodation",
+  "Feels Like Home - With Care That Truly Belongs to You ":
+    "facilities-home-feel",
+  "Rosewood Gardens Facilities": "facilities-amenities",
+  "Life at Rosewood Gardens": "facilities-life",
+};
 
 export default function Facilities() {
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const [searchParams] = useSearchParams();
+
+  // 🔎 Handle ?search=... → scroll to section (Facilities only)
+  useEffect(() => {
+    const raw = searchParams.get("search");
+    if (!raw) return;
+
+    const q = raw.toLowerCase().trim();
+    if (!q) return;
+
+    let targetId = KEYWORD_TO_SECTION[q];
+
+    // fuzzy match: look for any keyword contained in q
+    if (!targetId) {
+      for (const [keyword, sectionId] of Object.entries(KEYWORD_TO_SECTION)) {
+        if (q.includes(keyword.toLowerCase())) {
+          targetId = sectionId;
+          break;
+        }
+      }
+    }
+
+    // Only scroll for Facilities sections
+    if (!targetId || !targetId.startsWith("facilities-")) return;
+
+    const el = document.getElementById(targetId);
+    if (!el) return;
+
+    setTimeout(() => {
+      const HEADER_HEIGHT = 180; // adjust if needed
+      const elementY = el.getBoundingClientRect().top + window.scrollY;
+      const offsetY = elementY - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: offsetY,
+        behavior: "smooth",
+      });
+    }, 200);
+  }, [searchParams]);
 
   // Auto-advance slides every 5 seconds
   useEffect(() => {
@@ -70,13 +122,15 @@ export default function Facilities() {
           </div>
         </section>
 
+        {/* Overview section */}
         <section className="py-5">
           <div className="container">
             <div className="row">
-              <h5 className="text-muted fw-semibold">
-                Your Home, Your Comfort
-              </h5>
-              <h1 className="dark-text heading mb-5">
+              <h5 className="text-muted fw-semibold">Your Home, Your Comfort</h5>
+              <h1
+                className="dark-text heading mb-5"
+                id="facilities-overview"
+              >
                 A new standard in Supported Residential Aged & Disability Care
               </h1>
               <p>
@@ -103,10 +157,15 @@ export default function Facilities() {
           </div>
         </section>
 
+        {/* Life + care options + what makes different + facilities list */}
         <section className="pt-5 bg-white">
           <div className="container text-start">
             <div className="row justify-content-center text-center">
-              <h1 className="dark-text heading text-start mt-5">
+              {/* Life at Rosewood Gardens cards */}
+              <h1
+                className="dark-text heading text-start mt-5"
+                id="facilities-life"
+              >
                 Life at Rosewood Gardens{" "}
               </h1>
               <div className="row mt-3 d-flex align-items-stretch p-0">
@@ -127,7 +186,12 @@ export default function Facilities() {
                   </div>
                 ))}
               </div>
-              <h1 className="dark-text heading text-start mt-5">
+
+              {/* Care options */}
+              <h1
+                className="dark-text heading text-start mt-5"
+                id="facilities-care-options"
+              >
                 Care Options{" "}
               </h1>
               <div className="row mt-3 g-3">
@@ -140,9 +204,14 @@ export default function Facilities() {
                   </div>
                 ))}
               </div>
+
+              {/* What makes different */}
               <div className="row mt-5">
                 <div className="col-md-7 text-start">
-                  <h1 className="dark-text heading">
+                  <h1
+                    className="dark-text heading"
+                    id="facilities-what-makes-different"
+                  >
                     What Makes Rosewood Gardens Different
                   </h1>
                   <h6 className="mb-3">
@@ -192,55 +261,55 @@ export default function Facilities() {
                   />
                 </div>
               </div>
-              {/* <h1 className="dark-text heading my-5">
-                Dedicated Staff Assignment
-              </h1>
-              <p>
-                Creating warm, secure, trusting relationships. Our staff work
-                with the same residents every day. Each time family visits, they
-                see familiar faces-and feel confident their loved one is in the
-                care of people who truly understand their needs.
-              </p>
-              <p>
-                It’s continuity that builds trust, supports wellbeing, and makes
-                Rosewood Gardens feel like home.
-              </p> */}
+
+              {/* Facilities details cards */}
               <div className="row mt-3 align-items-stretch p-0">
-                {facilitieslist.map((facility, index) => (
-                  <div key={index} className="col-12 col-md-6 mb-3">
-                    <div className="card shadow-sm border rounded-4 p-3 text-start h-100 w-100">
-                      <h4 className="dark-text">{facility.title}</h4>
+                {facilitieslist.map((facility, index) => {
+                  const blockId = FACILITY_BLOCK_IDS[facility.title];
+                  return (
+                    <div
+                      key={index}
+                      className="col-12 col-md-6 mb-3"
+                      id={blockId}
+                    >
+                      <div className="card shadow-sm border rounded-4 p-3 text-start h-100 w-100">
+                        <h4 className="dark-text">{facility.title}</h4>
 
-                      {facility.description &&
-                      Array.isArray(facility.description)
-                        ? facility.description.map((desc, i) => (
-                            <p key={i} className="lh-base">
-                              {desc}
-                            </p>
-                          ))
-                        : facility.description && (
-                            <p className="lh-lg">{facility.description}</p>
-                          )}
+                        {facility.description &&
+                        Array.isArray(facility.description)
+                          ? facility.description.map((desc, i) => (
+                              <p key={i} className="lh-base">
+                                {desc}
+                              </p>
+                            ))
+                          : facility.description && (
+                              <p className="lh-lg">{facility.description}</p>
+                            )}
 
-                      {facility.list && Array.isArray(facility.list) && (
-                        <ul className="list-unstyled lh-base">
-                          {facility.list.map((item, i) => (
-                            <li key={i}>✓ {item}</li>
-                          ))}
-                        </ul>
-                      )}
+                        {facility.list && Array.isArray(facility.list) && (
+                          <ul className="list-unstyled lh-base">
+                            {facility.list.map((item, i) => (
+                              <li key={i}>✓ {item}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Facilities section */}
+        {/* Book a tour + quote + gallery */}
         <section className="bg-white py-5">
           <div className="container mt-3">
-            <div className="col-md-12 border bg-white rounded-4 shadow-sm p-3">
+            {/* Book a tour */}
+            <div
+              className="col-md-12 border bg-white rounded-4 shadow-sm p-3"
+              id="facilities-book-tour"
+            >
               <div className="card rounded-4 border-0 text-start p-4 align-items-center justify-content-center testimonal">
                 <div className="rounded-circle chatBtn d-flex align-items-center mb-3 justify-content-center icon-bg position-relative">
                   <i className="bi bi-calendar-day text-white"></i>
@@ -268,6 +337,8 @@ export default function Facilities() {
                 </div>
               </div>
             </div>
+
+            {/* Quote */}
             <div className="col-md-12 p-3 p-lg-5">
               <h4 className="text-muted text-center">
                 "Whatever the length of stay, residents are encouraged to bring
@@ -277,7 +348,11 @@ export default function Facilities() {
             </div>
           </div>
 
-          <div className="container text-center pt-5">
+          {/* Gallery */}
+          <div
+            className="container text-center pt-5"
+            id="facilities-gallery"
+          >
             <small className="text-uppercase dark-text fw-semibold">
               Facilities
             </small>
