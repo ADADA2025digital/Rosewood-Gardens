@@ -30,6 +30,7 @@ import ClinicalDisclaimer from "./Pages/ClinicalDisclaimer";
 import Video from "./assets/video.mp4";
 import SupportAtHome from "./Pages/SupportAtHome";
 import PriceList from "./Pages/PriceList";
+import SearchResultsPage from "./Pages/SearchResultsPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -113,7 +114,11 @@ function App() {
                 <Route path="/facilities" element={<Facilities />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/support-at-home" element={<SupportAtHome />} />
-                <Route path="/support-at-home-price-list" element={<PriceList />} />
+                <Route
+                  path="/support-at-home-price-list"
+                  element={<PriceList />}
+                />
+                <Route path="/search" element={<SearchResultsPage />} />
               </Routes>
             </div>
 

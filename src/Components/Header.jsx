@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
-import GlobalButton from "./Button";
 import FontSizeController from "./FontSizeController";
-import { SEARCH_ITEMS } from "../Config/searchConfig";
 
 export default function Header() {
   const [navbarFixed, setNavbarFixed] = useState(false);
@@ -16,9 +14,6 @@ export default function Header() {
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-
   const navigate = useNavigate();
 
   // Navbar fixed on scroll
@@ -61,68 +56,15 @@ export default function Header() {
     };
   }, [showModal]);
 
-  // 🔎 Filter search results whenever query changes (SAFE VERSION)
-  useEffect(() => {
-    const q = searchQuery.trim().toLowerCase();
-
-    if (!q) {
-      setSearchResults([]);
-      return;
-    }
-
-    const itemsArray = Array.isArray(SEARCH_ITEMS) ? SEARCH_ITEMS : [];
-
-    const results = itemsArray.filter((item) => {
-      if (!item) return false;
-
-      const label = item.label ? String(item.label).toLowerCase() : "";
-      const keywordsArray = Array.isArray(item.keywords) ? item.keywords : [];
-
-      const inLabel = label.includes(q);
-      const inKeywords = keywordsArray.some((kw) =>
-        String(kw || "")
-          .toLowerCase()
-          .includes(q)
-      );
-
-      return inLabel || inKeywords;
-    });
-
-    setSearchResults(results);
-  }, [searchQuery]);
-
-  // Click on a suggestion → navigate with ?search=<typed keyword>
-  const handleResultNavigate = (item) => {
-    const q = searchQuery.trim();
-    const basePath = (item && item.path) || "/";
-
-    const finalPath = q
-      ? `${basePath}?search=${encodeURIComponent(q)}`
-      : basePath;
-
-    setShowSearchDropdown(false);
-    setSearchResults([]);
-    setSearchQuery("");
-
-    navigate(finalPath);
-  };
-
-  // Enter key → go to first matched page with ?search=query
+  // Enter key → go to search results page
   const handleSearchKeyDown = (e) => {
-    if (e.key === "Enter" && searchResults.length > 0) {
-      const matchedItem = searchResults[0];
-
-      const basePath = matchedItem.path ? matchedItem.path.split("?")[0] : "/";
-
+    if (e.key === "Enter" && searchQuery.trim()) {
       const q = searchQuery.trim();
-      if (!q) return;
-
-      const finalPath = `${basePath}?search=${encodeURIComponent(q)}`;
-
-      navigate(finalPath);
-
-      setShowSearchDropdown(false);
-      setSearchResults([]);
+      
+      // Navigate to search results page with query
+      navigate(`/search?search=${encodeURIComponent(q)}`);
+      
+      // Clear search query
       setSearchQuery("");
     }
   };
@@ -173,7 +115,7 @@ export default function Header() {
               </div>
 
               <div className="col-md-auto d-flex align-items-center justify-content-end text-white fw-semibold p-0 gap-3">
-                {/* SEARCH BOX */}
+                {/* SEARCH BOX - WITHOUT SEARCH BUTTON */}
                 <div
                   className="position-relative"
                   style={{ minWidth: "300px" }}
@@ -187,60 +129,10 @@ export default function Header() {
                       className="form-control border-start-0"
                       placeholder="Search our site..."
                       value={searchQuery}
-                      onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        setShowSearchDropdown(true);
-                      }}
-                      onFocus={() => setShowSearchDropdown(true)}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={handleSearchKeyDown}
                     />
                   </div>
-
-                  {/* SEARCH RESULTS DROPDOWN */}
-                  {showSearchDropdown && searchQuery && (
-                    <div
-                      className="position-absolute bg-white w-100 shadow-sm mt-1 custom-search-dropdown"
-                      style={{
-                        zIndex: 1050,
-                        maxHeight: "300px",
-                        borderBottom: "5px solid #8d173d",
-                      }}
-                      onMouseLeave={() => setShowSearchDropdown(false)}
-                    >
-                      <div className="search-results-scroll-container">
-                        {searchResults.length > 0 ? (
-                          searchResults.map((item) => (
-                            <button
-                              key={item.path + item.label}
-                              type="button"
-                              className="list-group-item list-group-item-action border-0 w-100 text-start small py-2 px-3 search-result-item"
-                              style={{ fontSize: "0.85rem" }}
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                handleResultNavigate(item);
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "#f8f9fa";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "transparent";
-                              }}
-                            >
-                              <div className="fw-semibold small text-dark">
-                                {item.label}
-                              </div>
-                            </button>
-                          ))
-                        ) : (
-                          <div className="px-3 py-2 small text-muted">
-                            No results found
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 <a
@@ -531,6 +423,32 @@ export default function Header() {
                   Contact Us
                 </a>
               </li>
+              
+              {/* Mobile Search Box - WITHOUT SEARCH BUTTON */}
+              <li className="nav-item py-3">
+                <div className="input-group search-box bg-white input-group-sm mt-3">
+                  <span className="input-group-text border-end-0 bg-white">
+                    <i className="bi bi-search" />
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control border-start-0"
+                    placeholder="Search our site... (Press Enter)"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && searchQuery.trim()) {
+                        const q = searchQuery.trim();
+                        navigate(`/search?search=${encodeURIComponent(q)}`);
+                        setSearchQuery("");
+                        // Close mobile menu
+                        document.querySelector('[data-bs-dismiss="offcanvas"]').click();
+                      }
+                    }}
+                  />
+                </div>
+              </li>
+              
               <div className="row py-4">
                 <div className="col-12 d-flex align-items-center justify-content-center text-dark">
                   <a
@@ -541,6 +459,7 @@ export default function Header() {
                   </a>
                 </div>
               </div>
+              
               <FontSizeController />
             </ul>
           </div>
