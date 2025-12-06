@@ -1448,7 +1448,11 @@ em-emoji-picker {
 
 /* Search bar */
 .search-box .form-control:focus {
-  border: 0;
+  border: 0 !important;
+}
+
+.search-box .form-control {
+  border: 0 !important;
 }
 
 .search-box .input-group-text{
@@ -1456,5 +1460,5 @@ em-emoji-picker {
 }
 
 .search-box .input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback){
-  border: none;
+  border: none !important;
 }
