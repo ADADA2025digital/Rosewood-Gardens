@@ -120,7 +120,7 @@ export default function Header() {
                   className="position-relative"
                   style={{ minWidth: "300px" }}
                 >
-                  <div className="input-group search-box bg-white input-group-sm">
+                  <div className="input-group search-box bg-white border-0 input-group-sm">
                     <span className="input-group-text border-end-0 bg-white">
                       <i className="bi bi-search" />
                     </span>

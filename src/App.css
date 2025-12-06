@@ -1451,3 +1451,10 @@ em-emoji-picker {
   border: 0;
 }
 
+.search-box .input-group-text{
+  border: none;
+}
+
+.search-box .input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback){
+  border: none;
+}
