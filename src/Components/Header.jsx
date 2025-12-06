@@ -329,13 +329,13 @@ export default function Header() {
                 className="nav-item py-3 position-relative justify-content-center"
                 onClick={() => setIsAboutDropdownOpen(!isAboutDropdownOpen)}
               >
-                <button className="nav-item fw-bold fs-2 text-dark bg-transparent border-0">
+                <button className="nav-item fw-bold fs-2 text-dark bg-transparent border-0 d-flex align-items-center justify-content-center mx-auto">
                   About
-                  <i className="bi bi-caret-down-fill ms-1"></i>
+                  <i className="bi bi-caret-down-fill fs-5 ms-1"></i>
                 </button>
 
                 {isAboutDropdownOpen && (
-                  <ul className="dropdown-menu show position-static border-0 bg-transparent">
+                  <ul className="dropdown-menu show position-static border-0 bg-white">
                     <li>
                       <a
                         className="dropdown-item text-muted fs-3"
@@ -364,30 +364,18 @@ export default function Header() {
                 )}
               </li>
 
-              {/* Mobile Services Dropdown */}
-              <li className="nav-item py-3 position-relative justify-content-center">
-                <a
-                  className="nav-link fw-bold fs-2 text-dark text-decoration-none"
-                  href="/services"
-                >
+              {/* Mobile Services Dropdown - Fixed */}
+              <li
+                className="nav-item py-3 position-relative justify-content-center"
+                onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+              >
+                <button className="nav-item fw-bold fs-2 text-dark bg-transparent border-0 d-flex align-items-center justify-content-center mx-auto">
                   Services
-                </a>
-                <button
-                  className="position-absolute bg-transparent border-0"
-                  style={{
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                  onClick={() =>
-                    setIsServicesDropdownOpen(!isServicesDropdownOpen)
-                  }
-                >
-                  <i className="bi bi-caret-down-fill"></i>
+                  <i className="bi bi-caret-down-fill fs-5 ms-1"></i>
                 </button>
 
                 {isServicesDropdownOpen && (
-                  <ul className="dropdown-menu show position-static border-0 bg-transparent mt-2">
+                  <ul className="dropdown-menu show position-static border-0 bg-white">
                     <li>
                       <a
                         className="dropdown-item text-muted fs-3"
@@ -425,29 +413,27 @@ export default function Header() {
               </li>
               
               {/* Mobile Search Box - WITHOUT SEARCH BUTTON */}
-              <li className="nav-item py-3">
-                <div className="input-group search-box bg-white input-group-sm mt-3">
-                  <span className="input-group-text border-end-0 bg-white">
-                    <i className="bi bi-search" />
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control border-start-0"
-                    placeholder="Search our site... (Press Enter)"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && searchQuery.trim()) {
-                        const q = searchQuery.trim();
-                        navigate(`/search?search=${encodeURIComponent(q)}`);
-                        setSearchQuery("");
-                        // Close mobile menu
-                        document.querySelector('[data-bs-dismiss="offcanvas"]').click();
-                      }
-                    }}
-                  />
-                </div>
-              </li>
+              <div className="input-group search-box bg-white mt-3" style={{ width: '350px' }}>
+                <span className="input-group-text border-end-0 bg-white">
+                  <i className="bi bi-search" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control border-start-0"
+                  placeholder="Search our site..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchQuery.trim()) {
+                      const q = searchQuery.trim();
+                      navigate(`/search?search=${encodeURIComponent(q)}`);
+                      setSearchQuery("");
+                      // Close mobile menu
+                      document.querySelector('[data-bs-dismiss="offcanvas"]').click();
+                    }
+                  }}
+                />
+              </div>
               
               <div className="row py-4">
                 <div className="col-12 d-flex align-items-center justify-content-center text-dark">
@@ -460,7 +446,9 @@ export default function Header() {
                 </div>
               </div>
               
-              <FontSizeController />
+              <div className="d-flex justify-content-center">
+                <FontSizeController />
+              </div>
             </ul>
           </div>
         </div>
